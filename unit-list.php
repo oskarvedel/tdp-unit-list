@@ -2,12 +2,13 @@
 
 // require_once dirname(__FILE__) . '/../tdp-common/tdp-common-plugin.php';
 //require_once(plugin_dir_path(__FILE__) . 'tdp-common/tdp-common-plugin.php');
-require_once ABSPATH . '/wp-content/plugins/tdp-common/tdp-common-plugin.php';
+require_once WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . '/wp-content/plugins/tdp-common/tdp-common-plugin.php';
 
 // Define the shortcode and the function to execute when the shortcode is used.
 function custom_depotrum_list_func()
 {
     echo plugin_dir_path(__FILE__) . '../tdp-common/tdp-common-plugin.php';
+    echo WP_PLUGIN_DIR . DIRECTORY_SEPARATOR;
     $current_pod = pods();
 
     // Check if the Pod object exists and the field "partner" is set
