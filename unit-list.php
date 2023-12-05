@@ -180,7 +180,7 @@ function sort_depotrum_by_price($depotrum_items)
         ];
 
         if ($arrayObject->price == null) {
-            trigger_error("Encountered depotrum with no price, sorting by m2 size instead. depotrum ID:" .  $id, E_USER_WARNING);
+            trigger_error("Encountered depotrum with no price, sorting by m2 size instead. depotrum ID:" .  $id, E_USER_NOTICE);
             throw new Exception('Encountered depotrum with no price, sorting by m2 size instead');
         }
 
@@ -208,7 +208,7 @@ function sort_depotrum_by_m2_size($depotrum_items)
         ];
 
         if ($arrayObject->m2size == null) {
-            trigger_error("Encountered depotrum with no price or m2 size, sorting by m3 size instead. depotrum ID:" .  $id, E_USER_WARNING);
+            trigger_error("Encountered depotrum with no price or m2 size, sorting by m3 size instead. depotrum ID:" .  $id, E_USER_NOTICE);
             throw new Exception('Encountered depotrum with no price or m2 size, sorting by m3 size instead');
         }
         array_push($AllDepotrumArray, $arrayObject);
@@ -274,18 +274,4 @@ function getRelTypeId($id)
     } else {
         return $relType;
     }
-}
-
-function get_statistics_data_for_single_gd_place($gd_place_id)
-{
-    global $statistics_data_fields;
-
-    $return_array = [];
-
-    foreach ($statistics_data_fields as $field) {
-        $value = get_post_meta($gd_place_id, $field, true);
-        $return_array[$field] = $value;
-    }
-
-    return $return_array;
 }
