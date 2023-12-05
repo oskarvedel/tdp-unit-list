@@ -6,4 +6,3 @@
  */
 
 require_once dirname(__FILE__) . '/unit-list.php';
-require_once dirname(__FILE__) . '/../tdp-common/tdp-common-plugin.php';
