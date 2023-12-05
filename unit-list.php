@@ -6,7 +6,7 @@
 // Define the shortcode and the function to execute when the shortcode is used.
 function custom_depotrum_list_func()
 {
-    echo plugin_dir_path(__FILE__) . 'tdp-common/tdp-common-plugin.php';
+    echo plugin_dir_path(__FILE__) . '../tdp-common/tdp-common-plugin.php';
     $current_pod = pods();
 
     // Check if the Pod object exists and the field "partner" is set
