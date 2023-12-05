@@ -275,3 +275,17 @@ function getRelTypeId($id)
         return $relType;
     }
 }
+
+function get_statistics_data_for_single_gd_place($gd_place_id)
+{
+    global $statistics_data_fields;
+
+    $return_array = [];
+
+    foreach ($statistics_data_fields as $field) {
+        $value = get_post_meta($gd_place_id, $field, true);
+        $return_array[$field] = $value;
+    }
+
+    return $return_array;
+}
