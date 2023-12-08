@@ -1,14 +1,10 @@
 <?php
 
-// require_once dirname(__FILE__) . '/../tdp-common/tdp-common-plugin.php';
-//require_once(plugin_dir_path(__FILE__) . 'tdp-common/tdp-common-plugin.php');
-require_once WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . '/wp-content/plugins/tdp-common/tdp-common-plugin.php';
 
 // Define the shortcode and the function to execute when the shortcode is used.
 function custom_depotrum_list_func()
 {
-    echo plugin_dir_path(__FILE__) . '../tdp-common/tdp-common-plugin.php';
-    echo WP_PLUGIN_DIR . DIRECTORY_SEPARATOR;
+    //echo plugin_dir_path(__FILE__) . '../tdp-common/tdp-common-plugin.php';
     $current_pod = pods();
 
     // Check if the Pod object exists and the field "partner" is set
@@ -144,7 +140,7 @@ function generate_non_partner_text($finalOutput)
 {
     $current_pod = pods();
 
-    $statistics_data_fields = get_statistics_data_for_single_gd_place($current_pod->field("id"));
+    $statistics_data_fields = get_statistics_data_for_single_gd_place_unit_list($current_pod->field("id"));
     if (empty($statistics_data_fields)) {
         trigger_error("error in generate_non_partner_text: statistics_data_fields is empty for id: " . $current_pod->field("post_title"), E_USER_WARNING);
     }
