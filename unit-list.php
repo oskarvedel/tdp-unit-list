@@ -58,7 +58,7 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $depotrum_items
     foreach ($sorted_ids as $depotrum) {
         $id = $depotrum->id;
         if (get_post_meta($id, 'available', true)) {
-            $relTypeId = getRelTypeId($id);
+            $relTypeId = getRelTypeId_unitlist($id);
             $output = '<div class="depotrum-row">';
             $output .= '<div class="flex-container">';
             if (get_post_meta($relTypeId, 'm2', true) != null) {
@@ -203,7 +203,7 @@ function sort_depotrum_by_m2_size($depotrum_items)
     foreach ($depotrum_items as $depotrum) {
 
         $id = $depotrum['ID'];
-        $relTypeId = getRelTypeId($id);
+        $relTypeId = getRelTypeId_unitlist($id);
         $arrayObject = (object) [
             'id' => $id,
             'm2size' => get_post_meta($relTypeId, 'm2', true)
@@ -230,7 +230,7 @@ function sort_depotrum_by_m3_size($depotrum_items)
     foreach ($depotrum_items as $depotrum) {
 
         $id = $depotrum['ID'];
-        $relTypeId = getRelTypeId($id);
+        $relTypeId = getRelTypeId_unitlist($id);
         $arrayObject = (object) [
             'id' => $id,
             'm3size' => get_post_meta($relTypeId, 'm3', true)
@@ -267,7 +267,7 @@ function extract_evenly_spaced($array, $num_values)
     return $result;
 }
 
-function getRelTypeId($id)
+function getRelTypeId_unitlist($id)
 {
     $relType = get_post_meta($id, 'rel_type', true);
     if (is_array($relType)) {
