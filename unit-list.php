@@ -73,36 +73,6 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $depotrum_items
                 $output .= '</div>';
             }
 
-
-            /*$output .= '<div class="placement-column vertical-center">';
-            $placement = get_post_meta($relTypeId, 'placement', true);
-
-            if ($placement == 'indoor') {
-                $output .= '<div class="img vertical-center">';
-                $output .= '<img src="https://tjekdepot.dk/wp-content/uploads/2023/11/indoor.png" alt="Icon of an indoor storage facility" width="35" height="35">';
-                $output .= '</div>';
-                $output .= '<div class="placement-text-div">';
-                $output .= '<span class="placement-text">Placering:</span>';
-                $output .= '<p class="placement-heading">Indendørs</p>';
-                $output .= '</div>';
-            } elseif ($placement == 'container') {
-                $output .= '<div class="img vertical-center">';
-                $output .= '<img src="https://tjekdepot.dk/wp-content/uploads/2023/11/container.png" alt="Icon of a container" width="35" height="35">';
-                $output .= '</div>';
-                $output .= '<div class="placement-text-div">';
-                $output .= '<span class="placement-text">Placering:</span>';
-                $output .= '<p class="placement-heading">I container</p>';
-                $output .= '</div>';
-            } elseif ($placement == 'isolated_container') {
-                $output .= '<div class="img vertical-center">';
-                $output .= '<img src="https://tjekdepot.dk/wp-content/uploads/2023/11/container.png" alt="Icon of a container" width="35" height="35">';
-                $output .= '</div>';
-                $output .= '<div class="placement-text-div">';
-                $output .= '<span class="placement-text">Placering:</span>';
-                $output .= '<p class="placement-heading">Isoleret container</p>';
-                $output .= '</div>';
-            }
-            $output .= '</div>';*/
             $output .= '</div>';
 
             $output .= '<div class="price-column vertical-center">';
@@ -134,6 +104,19 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $depotrum_items
         $finalOutput .= $arrayItem;
     }
     return $finalOutput;
+}
+
+function generate_unit_illustration_column($relTypeId)
+{
+    $is_container = get_post_meta($relTypeId, 'm2', true);
+
+    $m2 = get_post_meta($relTypeId, 'm2', true);
+    $image_url = plugins_url('/images/your-image.jpg', __FILE__);
+
+    $output .= '<div class="image-column vertical-center">';
+    $output .= '<span class="m2size">' . get_post_meta($relTypeId, 'm2', true) . '</span>';
+    $output .= '<span class="m2label"> m2</span>';
+    $output .= '</div>';
 }
 
 function generate_non_partner_text($finalOutput)
@@ -271,7 +254,7 @@ function getRelTypeId_unitlist($id)
 {
     $relType = get_post_meta($id, 'rel_type', true);
     if (is_array($relType)) {
-        trigger_error("Rel type is an array for depotrum with id: " . $id);
+        // trigger_error("Rel type is an array for depotrum with id: " . $id);
         return $relType['ID'];
     } else {
         return $relType;
