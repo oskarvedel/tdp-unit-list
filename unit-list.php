@@ -129,40 +129,108 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
     if ($unit_type == "container") {
         if ($container_type == "8 feet") {
             $output .= '<span class="type">8-fods container</span>';
+            $output .= '<div class="break"></div>';
+            if ($m2 && $m3) {
+                $output .= '<span class="size">8-fods container på ' . $m2 . ' m² / ' . $m3 . ' m³</span>';
+            } else if ($m2) {
+                $output .= '<span class="size">8-fods container på ' . $m2 . ' </span>';
+                $output .= '<span class="sizelabel">m²</span>';
+            } else if ($m3) {
+                $output .= '<span class="size">8-fods container på ' . $m3 . '</span>';
+                $output .= '<span class="sizelabel">m³</span>';
+            }
         } else if ($container_type == "10 feet") {
             $output .= '<span class="type">10-fods container</span>';
+            $output .= '<div class="break"></div>';
+            if ($m2 && $m3) {
+                $output .= '<span class="size">10-fods container på ' . $m2 . ' m² / ' . $m3 . ' m³</span>';
+            } else if ($m2) {
+                $output .= '<span class="size">10-fods container på ' . $m2 . ' </span>';
+                $output .= '<span class="sizelabel">m²</span>';
+            } else if ($m3) {
+                $output .= '<span class="size">10-fods container på ' . $m3 . '</span>';
+                $output .= '<span class="sizelabel">m³</span>';
+            }
         } else if ($container_type == "20 feet") {
             $output .= '<span class="type">20-fods container</span>';
+            $output .= '<div class="break"></div>';
+            if ($m2 && $m3) {
+                $output .= '<span class="size">20-fods container på ' . $m2 . ' m² / ' . $m3 . ' m³</span>';
+            } else if ($m2) {
+                $output .= '<span class="size">20-fods container på ' . $m2 . ' </span>';
+                $output .= '<span class="sizelabel">m²</span>';
+            } else if ($m3) {
+                $output .= '<span class="size">20-fods container på ' . $m3 . '</span>';
+                $output .= '<span class="sizelabel">m³</span>';
+            }
         } else if ($container_type == "20 feet high cube") {
             $output .= '<span class="type">20-fods container</span>';
+            $output .= '<div class="break"></div>';
+            if ($m2 && $m3) {
+                $output .= '<span class="size">20-fods container på ' . $m2 . ' m² / ' . $m3 . ' m³</span>';
+            } else if ($m2) {
+                $output .= '<span class="size">20-fods container på ' . $m2 . ' </span>';
+                $output .= '<span class="sizelabel">m²</span>';
+            } else if ($m3) {
+                $output .= '<span class="size">20-fods container på ' . $m3 . '</span>';
+                $output .= '<span class="sizelabel">m³</span>';
+            }
         } else if ($container_type == "40 feet") {
             $output .= '<span class="type">40-fods container</span>';
+            $output .= '<div class="break"></div>';
+            if ($m2 && $m3) {
+                $output .= '<span class="size">40-fods container på ' . $m2 . ' m² / ' . $m3 . ' m³</span>';
+            } else if ($m2) {
+                $output .= '<span class="size">40-fods container på ' . $m2 . ' </span>';
+                $output .= '<span class="sizelabel">m²</span>';
+            } else if ($m3) {
+                $output .= '<span class="size">40-fods container på ' . $m3 . '</span>';
+                $output .= '<span class="sizelabel">m³</span>';
+            }
         } else if ($container_type == "40 feet high cube") {
             $output .= '<span class="type">40-fods container</span>';
+            $output .= '<div class="break"></div>';
+            if ($m2 && $m3) {
+                $output .= '<span class="size">40-fods container på ' . $m2 . ' m² / ' . $m3 . ' m³</span>';
+            } else if ($m2) {
+                $output .= '<span class="size">40-fods container på ' . $m2 . ' </span>';
+                $output .= '<span class="sizelabel">m²</span>';
+            } else if ($m3) {
+                $output .= '<span class="size">40-fods container på ' . $m3 . '</span>';
+                $output .= '<span class="sizelabel">m³</span>';
+            }
         } else {
             $output .= '<span class="type">Container</span>';
         }
     } else if ($unit_type == "unit_in_container") {
-        $output .= '<span class="type"> Depotrum i container</span>';
-    } else if ($unit_type == "indoor") {
         $output .= '<span class="type"> Depotrum på </span>';
-        if ($m2) {
-            $output .= '<span class="typesize"> ' . $m2 . ' m²</span>';
+        if ($m2 && $m3) {
+            $output .= '<span class="type">Depotrum på  ' . $m2 . ' m²</span>';
+            $output .= '<div class="break"></div>';
+            $output .= '<span class="size">Depotrum i container på ' . $m2 . ' m² / ' . $m3 . ' m³</span>';
+        } else if ($m2) {
+            $output .= '<span class="type">Depotrum på  ' . $m2 . ' m²</span>';
+            $output .= '<div class="break"></div>';
+            $output .= '<span class="size">Depotrum i container på ' . $m2 . ' m²</span>';
         } else if ($m3) {
-            $output .= '<span class="typesize">' . $m3 . ' m³</span>';
+            $output .= '<span class="type">Depotrum på  ' . $m3 . ' m³</span>';
+            $output .= '<div class="break"></div>';
+            $output .= '<span class="size">Depotrum i container på ' . $m3 . ' m³</span>';
         }
-    }
-
-    $output .= '<div class="break"></div>';
-
-    if ($m2 && $m3) {
-        $output .= '<span class="size"> ' . $m2 . ' m² / ' . $m3 . ' m³</span>';
-    } else if ($m2) {
-        $output .= '<span class="size">' . $m2 . ' </span>';
-        $output .= '<span class="sizelabel">m²</span>';
-    } else if ($m3) {
-        $output .= '<span class="size">' . $m3 . '</span>';
-        $output .= '<span class="sizelabel">m³</span>';
+    } else if ($unit_type == "indoor") {
+        if ($m2 && $m3) {
+            $output .= '<span class="type">Depotrum på  ' . $m2 . ' m²</span>';
+            $output .= '<div class="break"></div>';
+            $output .= '<span class="size">Indendørs depotrum på ' . $m2 . ' m² / ' . $m3 . ' m³</span>';
+        } else if ($m2) {
+            $output .= '<span class="type">Depotrum på  ' . $m2 . ' m²</span>';
+            $output .= '<div class="break"></div>';
+            $output .= '<span class="size">Indendørs depotrum på ' . $m2 . ' m²</span>';
+        } else if ($m3) {
+            $output .= '<span class="type">Depotrum på  ' . $m3 . ' m³</span>';
+            $output .= '<div class="break"></div>';
+            $output .= '<span class="size">Indendørs depotrum på ' . $m3 . ' m³</span>';
+        }
     }
 
     $output .= '</div>';
@@ -174,19 +242,19 @@ function generate_unit_illustration_column($relTypeId, $unit_type, $m2, $m3, $co
 {
     if ($unit_type == "container") {
         if ($container_type == "8 feet") {
-            $image_url = plugins_url('size-illustrations/10-feet-container.png', __FILE__);
+            $image_url = plugins_url('size-illustrations/10-feet-container-orig.png', __FILE__);
         } else if ($container_type == "10 feet") {
-            $image_url = plugins_url('size-illustrations/10-feet-container.png', __FILE__);
+            $image_url = plugins_url('size-illustrations/10-feet-container-orig.png', __FILE__);
         } else if ($container_type == "20 feet") {
-            $image_url = plugins_url('size-illustrations/10-feet-container.png', __FILE__);
+            $image_url = plugins_url('size-illustrations/10-feet-container-orig.png', __FILE__);
         } else if ($container_type == "20 feet high cube") {
-            $image_url = plugins_url('size-illustrations/10-feet-container.png', __FILE__);
+            $image_url = plugins_url('size-illustrations/10-feet-container-orig.png', __FILE__);
         } else if ($container_type == "40 feet") {
-            $image_url = plugins_url('size-illustrations/10-feet-container.png', __FILE__);
+            $image_url = plugins_url('size-illustrations/10-feet-container-orig.png', __FILE__);
         } else if ($container_type == "40 feet high cube") {
-            $image_url = plugins_url('size-illustrations/10-feet-container.png', __FILE__);
+            $image_url = plugins_url('size-illustrations/10-feet-container-orig.png', __FILE__);
         } else {
-            $image_url = plugins_url('size-illustrations/10-feet-container.png', __FILE__);
+            $image_url = plugins_url('size-illustrations/10-feet-container-orig.png', __FILE__);
         }
     } else if ($unit_type == "indoor") {
         if ($m2) {
@@ -200,13 +268,13 @@ function generate_unit_illustration_column($relTypeId, $unit_type, $m2, $m3, $co
             } elseif ($m2 > 4 && $m2 <= 6) {
                 $image_url = plugins_url('size-illustrations/mediums.png', __FILE__);
             } elseif ($m2 > 6 && $m2 <= 8) {
-                $image_url = plugins_url('size-illustrations/stor.png', __FILE__);
+                $image_url = plugins_url('size-illustrations/large.png', __FILE__);
             } elseif ($m2 > 8 && $m2 <= 12) {
-                $image_url = plugins_url('size-illustrations/stor.png', __FILE__);
+                $image_url = plugins_url('size-illustrations/large.png', __FILE__);
             } elseif ($m2 > 12 && $m2 <= 30) {
-                $image_url = plugins_url('size-illustrations/stor.png', __FILE__);
+                $image_url = plugins_url('size-illustrations/large.png', __FILE__);
             } elseif ($m2 > 30) {
-                $image_url = plugins_url('size-illustrations/stor.png', __FILE__);
+                $image_url = plugins_url('size-illustrations/large.png', __FILE__);
             }
         } else if ($m3) {
             $m3 = floatval($m3); // Convert m3 to integer if it's a string
@@ -219,16 +287,16 @@ function generate_unit_illustration_column($relTypeId, $unit_type, $m2, $m3, $co
             } elseif ($m3 > 10 && $m3 <= 15) {
                 $image_url = plugins_url('size-illustrations/mediums.png', __FILE__);
             } elseif ($m3 > 15 && $m3 <= 20) {
-                $image_url = plugins_url('size-illustrations/stor.png', __FILE__);
+                $image_url = plugins_url('size-illustrations/large.png', __FILE__);
             } elseif ($m3 > 20 && $m3 <= 30) {
-                $image_url = plugins_url('size-illustrations/stor.png', __FILE__);
+                $image_url = plugins_url('size-illustrations/large.png', __FILE__);
             } elseif ($m3 > 30 && $m3 <= 75) {
-                $image_url = plugins_url('size-illustrations/stor.png', __FILE__);
+                $image_url = plugins_url('size-illustrations/large.png', __FILE__);
             } elseif ($m3 > 75) {
-                $image_url = plugins_url('size-illustrations/stor.png', __FILE__);
+                $image_url = plugins_url('size-illustrations/large.png', __FILE__);
             }
         } else {
-            $image_url = plugins_url('size-illustrations/stor.png', __FILE__);
+            $image_url = plugins_url('size-illustrations/large.png', __FILE__);
         }
     } else {
         $image_url = plugins_url('size-illustrations/small.png', __FILE__);
@@ -237,7 +305,7 @@ function generate_unit_illustration_column($relTypeId, $unit_type, $m2, $m3, $co
 
 
     $output = '<div class="image-column vertical-center">';
-    $output .= '<img src="' . $image_url . '" width="60" height="60" alt="Illustration af depotrum" />';
+    $output .= '<img src="' . $image_url . '" width="70" height="70" alt="Illustration af depotrum" />';
     $output .= '</div>';
 
     return $output;
