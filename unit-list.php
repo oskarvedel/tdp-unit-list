@@ -10,25 +10,22 @@ function custom_depotrum_list_func()
     // Check if the Pod object exists and the field "partner" is set
     if ($current_pod && $current_pod->exists()) {
         $depotrum_items = $current_pod->field("depotrum");
-        $lokationId = $current_pod->field("id");
         $hide_units = $current_pod->field("hide_units");
 
         if ($depotrum_items && !empty($depotrum_items) && !$hide_units) {
             $partner = $current_pod->field("partner");
+            $lokationId = $current_pod->field("id");
+            $permalink = get_permalink($lokationId);
 
             $finalOutput = '<div class="depotrum-list">';
             if ($partner == 1) {
-                $finalOutput .= generate_unit_list($finalOutput, $partner, $lokationId, $depotrum_items);
+                $finalOutput .= generate_unit_list($finalOutput, $partner, $lokationId, $depotrum_items, $permalink);
             } else {
                 $finalOutput .= generate_non_partner_text($finalOutput);
             }
             $finalOutput .= "</div>";
 
-            if ((geodir_is_page('post_type') || geodir_is_page('search')) && $partner == 1) {
-                $finalOutput .= '<form action="' . get_permalink($lokationId) . '">';
-                $finalOutput .= '<input type="submit" class="view-all-button" value="Se alle priser" />';
-                $finalOutput .= '</form>';
-            }
+            $finalOutput .= generate_view_all_button($permalink, $partner);
             return $finalOutput;
         }
     }
@@ -37,7 +34,7 @@ function custom_depotrum_list_func()
 // Register the shortcode.
 add_shortcode("custom_depotrum_list", "custom_depotrum_list_func");
 
-function generate_unit_list($finalOutput, $partner, $lokationId, $depotrum_items)
+function generate_unit_list($finalOutput, $partner, $lokationId, $depotrum_items, $permalink)
 {
     $sorted_ids = [];
     try {
@@ -67,33 +64,18 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $depotrum_items
             $ventilated_container = get_post_meta($relTypeId, 'ventilated_container', true);
             $price = get_post_meta($id, 'price', true);
 
-            $output = '<div class="depotrum-row">';
+            $output = '<a href="' . $permalink . '" class="depotrum-row">';
             $output .= '<div class="flex-container">';
             $output .= generate_unit_illustration_column($relTypeId, $unit_type, $m2, $m3, $container_type);
-            $output .= generate_unit_size_column($relTypeId, $unit_type, $m2, $m3, $container_type);
+            $output .= generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_type);
 
             $output .= '</div>';
 
-            $output .= '<div class="price-column vertical-center">';
-            if ($price) {
-                $output .= '<span class="price">' . round(get_post_meta($id, 'price', true), 2) . ' kr.</span>';
-            } else {
-                $output .= '<span class="month">Pris ukendt</span>';
-            }
-            $output .= '</div>';
+            $output .= generate_price_column($price);
 
-            $output .= '<div class="navigation-column vertical-center">';
-            if ($partner && !geodir_is_page('post_type') && !geodir_is_page('search')) {
-                $output .= do_shortcode('[gd_ninja_forms form_id="5" text="Fortsæt" post_contact="1" output="button" bg_color="#FF3369" txt_color="#ffffff" size="h5" css_class="ninja-forms-book-button"]');
-            } else {
-                $output .= '<a href="' . get_permalink($lokationId) . '">';
-                $output .= '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25">';
-                $output .= '<path d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z" />';
-                $output .= '</svg>';
-                $output .= '</a>';
-            }
-            $output .= '</div>';
-            $output .= '</div>';
+            $output .= generate_navigation_column($partner);
+
+            $output .= '</a>';
 
             array_push($OutputArray, $output);
         }
@@ -104,41 +86,85 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $depotrum_items
     return $finalOutput;
 }
 
-function generate_unit_size_column($relTypeId, $unit_type, $m2, $m3, $container_type)
+function generate_view_all_button($permalink, $partner)
 {
-
-    $output = '<div class="size-column vertical-center">';
-    if ($m2) {
-        $output .= '<span class="size">' . $m2 . '</span>';
-        $output .= '<span class="sizelabel"> m²</span>';
-    } else if ($m3) {
-        $output .= '<span class="size">' . $m3 . '</span>';
-        $output .= '<span class="sizelabel"> m³</span>';
+    if ((geodir_is_page('post_type') || geodir_is_page('search')) && $partner == 1) {
+        $finalOutput = '<form action="' . $permalink . '">';
+        $finalOutput .= '<input type="submit" class="view-all-button" value="Se alle priser" />';
+        $finalOutput .= '</form>';
     }
+    return $finalOutput;
+}
 
-    $output .= '<div class="break"></div>';
+function generate_navigation_column($partner)
+{
+    $output = '<div class="navigation-column vertical-center">';
+    if ($partner && !geodir_is_page('post_type') && !geodir_is_page('search')) {
+        $output .= do_shortcode('[gd_ninja_forms form_id="5" text="Fortsæt" post_contact="1" output="button" bg_color="#FF3369" txt_color="#ffffff" size="h5" css_class="ninja-forms-book-button"]');
+    } else {
+        $output .= '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25">';
+        $output .= '<path d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z" />';
+        $output .= '</svg>';
+    }
+    $output .= '</div>';
+    return $output;
+}
+
+function generate_price_column($price)
+{
+    $output = '<div class="price-column vertical-center">';
+    if ($price) {
+        $output .= '<span class="price">' . round($price, 2) . ' kr.</span>';
+    } else {
+        $output .= '<span class="month">Pris ukendt</span>';
+    }
+    $output .= '</div>';
+    return $output;
+}
+
+function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_type)
+{
+    $output .= '<div class="size-column vertical-center">';
 
     if ($unit_type == "container") {
         if ($container_type == "8 feet") {
-            $output .= '<span class="type">8 fods container</span>';
+            $output .= '<span class="type">8-fods container</span>';
         } else if ($container_type == "10 feet") {
-            $output .= '<span class="type">10 fods container</span>';
+            $output .= '<span class="type">10-fods container</span>';
         } else if ($container_type == "20 feet") {
-            $output .= '<span class="type">20 fods container</span>';
+            $output .= '<span class="type">20-fods container</span>';
         } else if ($container_type == "20 feet high cube") {
-            $output .= '<span class="type">20 fods container</span>';
+            $output .= '<span class="type">20-fods container</span>';
         } else if ($container_type == "40 feet") {
-            $output .= '<span class="type">40 fods container</span>';
+            $output .= '<span class="type">40-fods container</span>';
         } else if ($container_type == "40 feet high cube") {
-            $output .= '<span class="type">40 fods container</span>';
+            $output .= '<span class="type">40-fods container</span>';
         } else {
             $output .= '<span class="type">Container</span>';
         }
     } else if ($unit_type == "unit_in_container") {
         $output .= '<span class="type"> Depotrum i container</span>';
     } else if ($unit_type == "indoor") {
-        $output .= '<span class="type"> Indendørs depotrum</span>';
+        $output .= '<span class="type"> Depotrum på </span>';
+        if ($m2) {
+            $output .= '<span class="typesize"> ' . $m2 . ' m²</span>';
+        } else if ($m3) {
+            $output .= '<span class="typesize">' . $m3 . ' m³</span>';
+        }
     }
+
+    $output .= '<div class="break"></div>';
+
+    if ($m2 && $m3) {
+        $output .= '<span class="size"> ' . $m2 . ' m² / ' . $m3 . ' m³</span>';
+    } else if ($m2) {
+        $output .= '<span class="size">' . $m2 . ' </span>';
+        $output .= '<span class="sizelabel">m²</span>';
+    } else if ($m3) {
+        $output .= '<span class="size">' . $m3 . '</span>';
+        $output .= '<span class="sizelabel">m³</span>';
+    }
+
     $output .= '</div>';
 
     return $output;
