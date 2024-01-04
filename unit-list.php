@@ -59,26 +59,24 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $depotrum_items
         $id = $depotrum->id;
         if (get_post_meta($id, 'available', true)) {
             $relTypeId = getRelTypeId_unitlist($id);
+            $unit_type = get_post_meta($relTypeId, 'unit_type', true);
+            $m2 = get_post_meta($relTypeId, 'm2', true);
+            $m3 = get_post_meta($relTypeId, 'm3', true);
+            $container_type = get_post_meta($relTypeId, 'container_type', true);
+            $isolated_container = get_post_meta($relTypeId, 'isolated_container', true);
+            $ventilated_container = get_post_meta($relTypeId, 'ventilated_container', true);
+            $price = get_post_meta($id, 'price', true);
+
             $output = '<div class="depotrum-row">';
             $output .= '<div class="flex-container">';
-            if (get_post_meta($relTypeId, 'm2', true) != null) {
-                $output .= '<div class="m2-column vertical-center">';
-                $output .= '<span class="m2size">' . get_post_meta($relTypeId, 'm2', true) . '</span>';
-                $output .= '<span class="m2label"> m2</span>';
-                $output .= '</div>';
-            } else if (get_post_meta($relTypeId, 'm3', true) != null) {
-                $output .= '<div class="m3-column vertical-center">';
-                $output .= '<span class="m3size">' . get_post_meta($relTypeId, 'm3', true) . '</span>';
-                $output .= '<span class="m3label"> m3</span>';
-                $output .= '</div>';
-            }
+            $output .= generate_unit_illustration_column($relTypeId, $unit_type, $m2, $m3, $container_type);
+            $output .= generate_unit_size_column($relTypeId, $unit_type, $m2, $m3, $container_type);
 
             $output .= '</div>';
 
             $output .= '<div class="price-column vertical-center">';
-            if (get_post_meta($id, 'price', true)) {
+            if ($price) {
                 $output .= '<span class="price">' . round(get_post_meta($id, 'price', true), 2) . ' kr.</span>';
-                //$output .= '<span class="month">/måned</span>';
             } else {
                 $output .= '<span class="month">Pris ukendt</span>';
             }
@@ -106,18 +104,105 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $depotrum_items
     return $finalOutput;
 }
 
-function generate_unit_illustration_column($relTypeId)
+function generate_unit_size_column($relTypeId, $unit_type, $m2, $m3, $container_type)
 {
-    $is_container = get_post_meta($relTypeId, 'm2', true);
 
-    $m2 = get_post_meta($relTypeId, 'm2', true);
-    $image_url = plugins_url('/images/your-image.jpg', __FILE__);
+    $output = '<div class="size-column vertical-center">';
+    if ($m2) {
+        $output .= '<span class="size">' . $m2 . '</span>';
+        $output .= '<span class="sizelabel"> m²</span>';
+    } else if ($m3) {
+        $output .= '<span class="size">' . $m3 . '</span>';
+        $output .= '<span class="sizelabel"> m³</span>';
+    }
 
-    $output .= '<div class="image-column vertical-center">';
-    $output .= '<span class="m2size">' . get_post_meta($relTypeId, 'm2', true) . '</span>';
-    $output .= '<span class="m2label"> m2</span>';
+    $output .= '<div class="break"></div>';
+
+    if ($unit_type == "container") {
+        $output .= '<span class="type">Container</span>';
+    } else if ($unit_type == "unit_in_container") {
+        $output .= '<span class="type"> Depotrum i container</span>';
+    } else if ($unit_type == "indoor") {
+        $output .= '<span class="type"> Indendørs depotrum</span>';
+    }
     $output .= '</div>';
+
+    return $output;
 }
+
+function generate_unit_illustration_column($relTypeId, $unit_type, $m2, $m3, $container_type)
+{
+    if ($unit_type == "container") {
+        if ($container_type == "8 feet") {
+            $image_url = plugins_url('size-illustrations/10-feet-container.png', __FILE__);
+        } else if ($container_type == "10 feet") {
+            $image_url = plugins_url('size-illustrations/10-feet-container.png', __FILE__);
+        } else if ($container_type == "20 feet") {
+            $image_url = plugins_url('size-illustrations/10-feet-container.png', __FILE__);
+        } else if ($container_type == "20 feet high cube") {
+            $image_url = plugins_url('size-illustrations/10-feet-container.png', __FILE__);
+        } else if ($container_type == "40 feet") {
+            $image_url = plugins_url('size-illustrations/10-feet-container.png', __FILE__);
+        } else if ($container_type == "40 feet high cube") {
+            $image_url = plugins_url('size-illustrations/10-feet-container.png', __FILE__);
+        } else {
+            $image_url = plugins_url('size-illustrations/10-feet-container.png', __FILE__);
+        }
+    } else if ($unit_type == "indoor") {
+        if ($m2) {
+            $m2 = floatval($m2); // Convert m2 to integer if it's a string
+            if ($m2 <= 1) {
+                $image_url = plugins_url('size-illustrations/micro.png', __FILE__);
+            } elseif ($m2 > 1 && $m2 <= 2.5) {
+                $image_url = plugins_url('size-illustrations/mini.png', __FILE__);
+            } elseif ($m2 > 2.5 && $m2 <= 4) {
+                $image_url = plugins_url('size-illustrations/small.png', __FILE__);
+            } elseif ($m2 > 4 && $m2 <= 6) {
+                $image_url = plugins_url('size-illustrations/mediums.png', __FILE__);
+            } elseif ($m2 > 6 && $m2 <= 8) {
+                $image_url = plugins_url('size-illustrations/stor.png', __FILE__);
+            } elseif ($m2 > 8 && $m2 <= 12) {
+                $image_url = plugins_url('size-illustrations/stor.png', __FILE__);
+            } elseif ($m2 > 12 && $m2 <= 30) {
+                $image_url = plugins_url('size-illustrations/stor.png', __FILE__);
+            } elseif ($m2 > 30) {
+                $image_url = plugins_url('size-illustrations/stor.png', __FILE__);
+            }
+        } else if ($m3) {
+            $m3 = floatval($m3); // Convert m3 to integer if it's a string
+            if ($m3 <= 2.5) {
+                $image_url = plugins_url('size-illustrations/micro.png', __FILE__);
+            } elseif ($m3 > 2.5 && $m3 <= 6.25) {
+                $image_url = plugins_url('size-illustrations/mini.png', __FILE__);
+            } elseif ($m3 > 6.25 && $m3 <= 10) {
+                $image_url = plugins_url('size-illustrations/small.png', __FILE__);
+            } elseif ($m3 > 10 && $m3 <= 15) {
+                $image_url = plugins_url('size-illustrations/mediums.png', __FILE__);
+            } elseif ($m3 > 15 && $m3 <= 20) {
+                $image_url = plugins_url('size-illustrations/stor.png', __FILE__);
+            } elseif ($m3 > 20 && $m3 <= 30) {
+                $image_url = plugins_url('size-illustrations/stor.png', __FILE__);
+            } elseif ($m3 > 30 && $m3 <= 75) {
+                $image_url = plugins_url('size-illustrations/stor.png', __FILE__);
+            } elseif ($m3 > 75) {
+                $image_url = plugins_url('size-illustrations/stor.png', __FILE__);
+            }
+        } else {
+            $image_url = plugins_url('size-illustrations/stor.png', __FILE__);
+        }
+    } else {
+        $image_url = plugins_url('size-illustrations/small.png', __FILE__);
+    }
+
+
+
+    $output = '<div class="image-column vertical-center">';
+    $output .= '<img src="' . $image_url . '" width="60" height="60" alt="Illustration af depotrum" />';
+    $output .= '</div>';
+
+    return $output;
+}
+
 
 function generate_non_partner_text($finalOutput)
 {
