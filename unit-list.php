@@ -203,7 +203,6 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
             $output .= '<span class="type">Container</span>';
         }
     } else if ($unit_type == "unit_in_container") {
-        $output .= '<span class="type"> Depotrum på </span>';
         if ($m2 && $m3) {
             $output .= '<span class="type">Depotrum på  ' . $m2 . ' m²</span>';
             $output .= '<div class="break"></div>';
