@@ -119,7 +119,21 @@ function generate_unit_size_column($relTypeId, $unit_type, $m2, $m3, $container_
     $output .= '<div class="break"></div>';
 
     if ($unit_type == "container") {
-        $output .= '<span class="type">Container</span>';
+        if ($container_type == "8 feet") {
+            $output .= '<span class="type">8 fods container</span>';
+        } else if ($container_type == "10 feet") {
+            $output .= '<span class="type">10 fods container</span>';
+        } else if ($container_type == "20 feet") {
+            $output .= '<span class="type">20 fods container</span>';
+        } else if ($container_type == "20 feet high cube") {
+            $output .= '<span class="type">20 fods container</span>';
+        } else if ($container_type == "40 feet") {
+            $output .= '<span class="type">40 fods container</span>';
+        } else if ($container_type == "40 feet high cube") {
+            $output .= '<span class="type">40 fods container</span>';
+        } else {
+            $output .= '<span class="type">Container</span>';
+        }
     } else if ($unit_type == "unit_in_container") {
         $output .= '<span class="type"> Depotrum i container</span>';
     } else if ($unit_type == "indoor") {
