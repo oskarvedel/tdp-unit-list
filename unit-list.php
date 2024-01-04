@@ -59,6 +59,7 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $depotrum_items
             $unit_type = get_post_meta($relTypeId, 'unit_type', true);
             $m2 = get_post_meta($relTypeId, 'm2', true);
             $m3 = get_post_meta($relTypeId, 'm3', true);
+
             $container_type = get_post_meta($relTypeId, 'container_type', true);
             $isolated_container = get_post_meta($relTypeId, 'isolated_container', true);
             $ventilated_container = get_post_meta($relTypeId, 'ventilated_container', true);
@@ -128,111 +129,160 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
 
     if ($unit_type == "container") {
         if ($container_type == "8 feet") {
-            $output .= '<span class="type">8-fods container</span>';
+            $output .= '<span class="bignormal" style="margin-bottom: -1.5rem;">8-fods container</span>';
             $output .= '<div class="break"></div>';
             if ($m2 && $m3) {
-                $output .= '<span class="size">8-fods container på ' . $m2 . ' m² / ' . $m3 . ' m³</span>';
+                $output .= '<span class="detaileddesc">8-fods container på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
             } else if ($m2) {
-                $output .= '<span class="size">8-fods container på ' . $m2 . ' </span>';
-                $output .= '<span class="sizelabel">m²</span>';
+                $output .= '<span class="detaileddesc">8-fods container på ' . number_format($m2, 1, ',', '') . ' m²</span>';
             } else if ($m3) {
-                $output .= '<span class="size">8-fods container på ' . $m3 . '</span>';
-                $output .= '<span class="sizelabel">m³</span>';
+                $output .= '<span class="detaileddesc">8-fods container på ' . number_format($m3, 1, ',', '') . 'm³</span>';
             }
         } else if ($container_type == "10 feet") {
-            $output .= '<span class="type">10-fods container</span>';
+            $output .= '<span class="bignormal" style="margin-bottom: -1.5rem;">10-fods container</span>';
             $output .= '<div class="break"></div>';
             if ($m2 && $m3) {
-                $output .= '<span class="size">10-fods container på ' . $m2 . ' m² / ' . $m3 . ' m³</span>';
+                $output .= '<span class="detaileddesc">10-fods container på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
             } else if ($m2) {
-                $output .= '<span class="size">10-fods container på ' . $m2 . ' </span>';
-                $output .= '<span class="sizelabel">m²</span>';
+                $output .= '<span class="detaileddesc">10-fods container på ' . number_format($m2, 1, ',', '') . ' m²</span>';
             } else if ($m3) {
-                $output .= '<span class="size">10-fods container på ' . $m3 . '</span>';
-                $output .= '<span class="sizelabel">m³</span>';
+                $output .= '<span class="detaileddesc">10-fods container på ' . number_format($m3, 1, ',', '') . 'm³</span>';
             }
         } else if ($container_type == "20 feet") {
-            $output .= '<span class="type">20-fods container</span>';
+            $output .= '<span class="bignormal" style="margin-bottom: -1.5rem;">20-fods container</span>';
             $output .= '<div class="break"></div>';
             if ($m2 && $m3) {
-                $output .= '<span class="size">20-fods container på ' . $m2 . ' m² / ' . $m3 . ' m³</span>';
+                $output .= '<span class="detaileddesc">20-fods container på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
             } else if ($m2) {
-                $output .= '<span class="size">20-fods container på ' . $m2 . ' </span>';
-                $output .= '<span class="sizelabel">m²</span>';
+                $output .= '<span class="detaileddesc">20-fods container på ' . number_format($m2, 1, ',', '') . 'm²</span>';
             } else if ($m3) {
-                $output .= '<span class="size">20-fods container på ' . $m3 . '</span>';
-                $output .= '<span class="sizelabel">m³</span>';
+                $output .= '<span class="detaileddesc">20-fods container på ' . number_format($m3, 1, ',', '') . 'm³</span>';
             }
         } else if ($container_type == "20 feet high cube") {
-            $output .= '<span class="type">20-fods container</span>';
+            $output .= '<span class="bignormal" style="margin-bottom: -1.5rem;">20-fods container</span>';
             $output .= '<div class="break"></div>';
             if ($m2 && $m3) {
-                $output .= '<span class="size">20-fods container på ' . $m2 . ' m² / ' . $m3 . ' m³</span>';
+                $output .= '<span class="detaileddesc">20-fods container på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
             } else if ($m2) {
-                $output .= '<span class="size">20-fods container på ' . $m2 . ' </span>';
-                $output .= '<span class="sizelabel">m²</span>';
+                $output .= '<span class="detaileddesc">20-fods container på ' . number_format($m2, 1, ',', '') . 'm²</span>';
             } else if ($m3) {
-                $output .= '<span class="size">20-fods container på ' . $m3 . '</span>';
-                $output .= '<span class="sizelabel">m³</span>';
+                $output .= '<span class="detaileddesc">20-fods container på ' . number_format($m3, 1, ',', '') . 'm³</span>';
             }
         } else if ($container_type == "40 feet") {
-            $output .= '<span class="type">40-fods container</span>';
+            $output .= '<span class="bignormal" style="margin-bottom: -1.5rem;">40-fods container</span>';
             $output .= '<div class="break"></div>';
             if ($m2 && $m3) {
-                $output .= '<span class="size">40-fods container på ' . $m2 . ' m² / ' . $m3 . ' m³</span>';
+                $output .= '<span class="detaileddesc">40-fods container på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
             } else if ($m2) {
-                $output .= '<span class="size">40-fods container på ' . $m2 . ' </span>';
-                $output .= '<span class="sizelabel">m²</span>';
+                $output .= '<span class="detaileddesc">40-fods container på ' . number_format($m2, 1, ',', '') . 'm²</span>';
             } else if ($m3) {
-                $output .= '<span class="size">40-fods container på ' . $m3 . '</span>';
-                $output .= '<span class="sizelabel">m³</span>';
+                $output .= '<span class="detaileddesc">40-fods container på ' . number_format($m3, 1, ',', '') . 'm³</span>';
             }
         } else if ($container_type == "40 feet high cube") {
-            $output .= '<span class="type">40-fods container</span>';
+            $output .= '<div class="size-column vertical-center">';
+            $output .= '<span class="bignormal" style="margin-bottom: -1.5rem;">40-fods container</span>';
+            $output .= '</div>';
             $output .= '<div class="break"></div>';
             if ($m2 && $m3) {
-                $output .= '<span class="size">40-fods container på ' . $m2 . ' m² / ' . $m3 . ' m³</span>';
+                $output .= '<span class="detaileddesc">40-fods container på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
             } else if ($m2) {
-                $output .= '<span class="size">40-fods container på ' . $m2 . ' </span>';
-                $output .= '<span class="sizelabel">m²</span>';
+                $output .= '<span class="detaileddesc">40-fods container på ' . number_format($m2, 1, ',', '') . 'm²</span>';
             } else if ($m3) {
-                $output .= '<span class="size">40-fods container på ' . $m3 . '</span>';
-                $output .= '<span class="sizelabel">m³</span>';
+                $output .= '<span class="detaileddesc">40-fods container på ' . number_format($m3, 1, ',', '') . 'm³</span>';
             }
         } else {
-            $output .= '<span class="type">Container</span>';
+            $output .= '<span class="smallbold">Container</span>';
         }
     } else if ($unit_type == "unit_in_container") {
         if ($m2 && $m3) {
-            $output .= '<span class="type">Depotrum på  ' . $m2 . ' m²</span>';
+            $output .= '<span class="smallbold">Depotrum</span>';
             $output .= '<div class="break"></div>';
-            $output .= '<span class="size">Depotrum i container på ' . $m2 . ' m² / ' . $m3 . ' m³</span>';
+            $output .= '<span class="bigbold">' . number_format($m2, 1, ',', '') . ' m²</span>';
+            $output .= '<div class="break"></div>';
+            $output .= '<span class="detaileddesc">Depotrum i container på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
         } else if ($m2) {
-            $output .= '<span class="type">Depotrum på  ' . $m2 . ' m²</span>';
+            $output .= '<span class="smallbold">Depotrum</span>';
             $output .= '<div class="break"></div>';
-            $output .= '<span class="size">Depotrum i container på ' . $m2 . ' m²</span>';
+            $output .= '<span class="bigbold">' . number_format($m2, 1, ',', '') . ' m²</span>';
+            $output .= '<div class="break"></div>';
+            $output .= '<span class="detaileddesc">Depotrum i container på ' . number_format($m2, 1, ',', '') . ' m²</span>';
         } else if ($m3) {
-            $output .= '<span class="type">Depotrum på  ' . $m3 . ' m³</span>';
+            $output .= '<span class="smallbold">Depotrum</span>';
             $output .= '<div class="break"></div>';
-            $output .= '<span class="size">Depotrum i container på ' . $m3 . ' m³</span>';
+            $output .= '<span class="bigbold">' . number_format($m3, 1, ',', '') . ' m³</span>';
+            $output .= '<div class="break"></div>';
+            $output .= '<span class="detaileddesc">Depotrum i container på ' . number_format($m3, 1, ',', '') . ' m³</span>';
         }
     } else if ($unit_type == "indoor") {
         if ($m2 && $m3) {
-            $output .= '<span class="type">Depotrum på  ' . $m2 . ' m²</span>';
+            $output .= generate_unit_size_smallbold_text($m2, $m3);
             $output .= '<div class="break"></div>';
-            $output .= '<span class="size">Indendørs depotrum på ' . $m2 . ' m² / ' . $m3 . ' m³</span>';
+            $output .= '<span class="bigbold">' . number_format($m2, 1, ',', '') . ' m²</span>';
+            $output .= '<div class="break"></div>';
+            $output .= '<span class="detaileddesc">Indendørs depotrum på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
         } else if ($m2) {
-            $output .= '<span class="type">Depotrum på  ' . $m2 . ' m²</span>';
+            $output .= generate_unit_size_smallbold_text($m2, $m3);
             $output .= '<div class="break"></div>';
-            $output .= '<span class="size">Indendørs depotrum på ' . $m2 . ' m²</span>';
+            $output .= '<span class="bigbold">' . number_format($m2, 1, ',', '') . ' m²</span>';
+            $output .= '<div class="break"></div>';
+            $output .= '<span class="detaileddesc">Indendørs depotrum på ' . number_format($m2, 1, ',', '') . ' m²</span>';
         } else if ($m3) {
-            $output .= '<span class="type">Depotrum på  ' . $m3 . ' m³</span>';
+            $output .= generate_unit_size_smallbold_text($m2, $m3);
             $output .= '<div class="break"></div>';
-            $output .= '<span class="size">Indendørs depotrum på ' . $m3 . ' m³</span>';
+            $output .= '<span class="bigbold">' . number_format($m3, 1, ',', '') . ' m³</span>';
+            $output .= '<div class="break"></div>';
+            $output .= '<span class="detaileddesc">Indendørs depotrum på ' . number_format($m3, 1, ',', '') . ' m³</span>';
         }
     }
 
     $output .= '</div>';
+
+    return $output;
+}
+
+function generate_unit_size_smallbold_text($m2, $m3)
+{
+    if ($m2) {
+        $m2 = floatval($m2); // Convert m2 to integer if it's a string
+        if ($m2 <= 1) {
+            $output = '<span class="smallbold">Mikro depotrum</span>';
+        } elseif ($m2 > 1 && $m2 <= 2.5) {
+            $output = '<span class="smallbold">Mini depotrum</span>';
+        } elseif ($m2 > 2.5 && $m2 <= 4) {
+            $output = '<span class="smallbold">Lille depotrum</span>';
+        } elseif ($m2 > 4 && $m2 <= 6) {
+            $output = '<span class="smallbold">Mellem depotrum</span>';
+        } elseif ($m2 > 6 && $m2 <= 8) {
+            $output = '<span class="smallbold">Stort depotrum</span>';
+        } elseif ($m2 > 8 && $m2 <= 12) {
+            $output = '<span class="smallbold">Stort depotrum</span>';
+        } elseif ($m2 > 12 && $m2 <= 30) {
+            $output = '<span class="smallbold">Meget stort depotrum</span>';
+        } elseif ($m2 > 30) {
+            $output = '<span class="smallbold">Meget stort depotrum</span>';
+        }
+    } else if ($m3) {
+        $m3 = floatval($m3); // Convert m3 to integer if it's a string
+        if ($m3 <= 2.5) {
+            $output = '<span class="smallbold">Mikro depotrum</span>';
+        } elseif ($m3 > 2.5 && $m3 <= 6.25) {
+            $output = '<span class="smallbold">Mini depotrum</span>';
+        } elseif ($m3 > 6.25 && $m3 <= 10) {
+            $output = '<span class="smallbold">Lille depotrum</span>';
+        } elseif ($m3 > 10 && $m3 <= 15) {
+            $output = '<span class="smallbold">Mellem depotrum</span>';
+        } elseif ($m3 > 15 && $m3 <= 20) {
+            $output = '<span class="smallbold">Stort depotrum</span>';
+        } elseif ($m3 > 20 && $m3 <= 30) {
+            $output = '<span class="smallbold">Stort depotrum</span>';
+        } elseif ($m3 > 30 && $m3 <= 75) {
+            $output = '<span class="smallbold">Meget stort depotrum</span>';
+        } elseif ($m3 > 75) {
+            $output = '<span class="smallbold">Meget stort depotrum</span>';
+        }
+    } else {
+        $output = '<span class="smallbold">Depotrum</span>';
+    }
 
     return $output;
 }
