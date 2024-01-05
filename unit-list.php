@@ -125,7 +125,7 @@ function generate_price_column($price)
 
 function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_type)
 {
-    $output .= '<div class="size-column vertical-center">';
+    $output = '<div class="size-column vertical-center">';
 
     if ($unit_type == "container") {
         if ($container_type == "8 feet") {
