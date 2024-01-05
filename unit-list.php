@@ -129,7 +129,7 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
 
     if ($unit_type == "container") {
         if ($container_type == "8 feet") {
-            $output .= '<span class="bignormal" style="margin-bottom: -1.5rem;">8-fods container</span>';
+            $output .= '<span class="bignormal">8-fods container</span>';
             $output .= '<div class="break"></div>';
             if ($m2 && $m3) {
                 $output .= '<span class="detaileddesc">8-fods container på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
@@ -139,7 +139,7 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
                 $output .= '<span class="detaileddesc">8-fods container på ' . number_format($m3, 1, ',', '') . 'm³</span>';
             }
         } else if ($container_type == "10 feet") {
-            $output .= '<span class="bignormal" style="margin-bottom: -1.5rem;">10-fods container</span>';
+            $output .= '<span class="bignormal">10-fods container</span>';
             $output .= '<div class="break"></div>';
             if ($m2 && $m3) {
                 $output .= '<span class="detaileddesc">10-fods container på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
@@ -149,7 +149,7 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
                 $output .= '<span class="detaileddesc">10-fods container på ' . number_format($m3, 1, ',', '') . 'm³</span>';
             }
         } else if ($container_type == "20 feet") {
-            $output .= '<span class="bignormal" style="margin-bottom: -1.5rem;">20-fods container</span>';
+            $output .= '<span class="bignormal">20-fods container</span>';
             $output .= '<div class="break"></div>';
             if ($m2 && $m3) {
                 $output .= '<span class="detaileddesc">20-fods container på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
@@ -159,7 +159,7 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
                 $output .= '<span class="detaileddesc">20-fods container på ' . number_format($m3, 1, ',', '') . 'm³</span>';
             }
         } else if ($container_type == "20 feet high cube") {
-            $output .= '<span class="bignormal" style="margin-bottom: -1.5rem;">20-fods container</span>';
+            $output .= '<span class="bignormal">20-fods container</span>';
             $output .= '<div class="break"></div>';
             if ($m2 && $m3) {
                 $output .= '<span class="detaileddesc">20-fods container på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
@@ -169,7 +169,7 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
                 $output .= '<span class="detaileddesc">20-fods container på ' . number_format($m3, 1, ',', '') . 'm³</span>';
             }
         } else if ($container_type == "40 feet") {
-            $output .= '<span class="bignormal" style="margin-bottom: -1.5rem;">40-fods container</span>';
+            $output .= '<span class="bignormal">40-fods container</span>';
             $output .= '<div class="break"></div>';
             if ($m2 && $m3) {
                 $output .= '<span class="detaileddesc">40-fods container på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
@@ -180,7 +180,7 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
             }
         } else if ($container_type == "40 feet high cube") {
             $output .= '<div class="bignormal vertical-center">';
-            $output .= '<span class="bignormal" style="margin-bottom: -1.5rem;">40-fods container</span>';
+            $output .= '<span class="bignormal">40-fods container</span>';
             $output .= '</div>';
             $output .= '<div class="break"></div>';
             if ($m2 && $m3) {
@@ -245,7 +245,7 @@ function generate_unit_size_smallbold_text($m2, $m3)
         if ($m2 <= 1) {
             $output = '<span class="smallbold">Mikro depotrum</span>';
         } elseif ($m2 > 1 && $m2 <= 2.5) {
-            $output = '<p class="smallbold">Mini depotrum</p>';
+            $output = '<span class="smallbold">Mini depotrum</span>';
         } elseif ($m2 > 2.5 && $m2 <= 4) {
             $output = '<span class="smallbold">Lille depotrum</span>';
         } elseif ($m2 > 4 && $m2 <= 6) {
