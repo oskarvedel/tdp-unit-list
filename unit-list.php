@@ -179,7 +179,7 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
                 $output .= '<span class="detaileddesc">40-fods container på ' . number_format($m3, 1, ',', '') . 'm³</span>';
             }
         } else if ($container_type == "40 feet high cube") {
-            $output .= '<div class="size-column vertical-center">';
+            $output .= '<div class="bignormal vertical-center">';
             $output .= '<span class="bignormal" style="margin-bottom: -1.5rem;">40-fods container</span>';
             $output .= '</div>';
             $output .= '<div class="break"></div>';
@@ -247,7 +247,7 @@ function generate_unit_size_smallbold_text($m2, $m3)
         if ($m2 <= 1) {
             $output = '<span class="smallbold">Mikro depotrum</span>';
         } elseif ($m2 > 1 && $m2 <= 2.5) {
-            $output = '<span class="smallbold">Mini depotrum</span>';
+            $output = '<p class="smallbold">Mini depotrum</p>';
         } elseif ($m2 > 2.5 && $m2 <= 4) {
             $output = '<span class="smallbold">Lille depotrum</span>';
         } elseif ($m2 > 4 && $m2 <= 6) {
