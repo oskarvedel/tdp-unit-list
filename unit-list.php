@@ -190,8 +190,6 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
             } else if ($m3) {
                 $output .= '<span class="detaileddesc">40-fods container på ' . number_format($m3, 1, ',', '') . 'm³</span>';
             }
-        } else {
-            $output .= '<span class="smallbold">Container</span>';
         }
     } else if ($unit_type == "unit_in_container") {
         if ($m2 && $m3) {
