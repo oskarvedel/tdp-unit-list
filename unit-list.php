@@ -96,6 +96,7 @@ function generate_view_all_button($permalink, $partner)
         return $finalOutput;
     } else {
         return '';
+    }
 }
 
 function generate_navigation_column($partner)
