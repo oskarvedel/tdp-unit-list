@@ -93,8 +93,9 @@ function generate_view_all_button($permalink, $partner)
         $finalOutput = '<form action="' . $permalink . '">';
         $finalOutput .= '<input type="submit" class="view-all-button" value="Se alle priser" />';
         $finalOutput .= '</form>';
-    }
-    return $finalOutput;
+        return $finalOutput;
+    } else {
+        return '';
 }
 
 function generate_navigation_column($partner)
