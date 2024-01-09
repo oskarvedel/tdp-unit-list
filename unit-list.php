@@ -4,7 +4,7 @@
 // Define the shortcode and the function to execute when the shortcode is used.
 function custom_depotrum_list_func()
 {
-    xdebug_break();
+    // xdebug_break();
     //echo plugin_dir_path(__FILE__) . '../tdp-common/tdp-common-plugin.php';
     $current_pod = pods();
 
@@ -95,7 +95,6 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
             }
         }
 
-
         $output .= '<div class="flex-container">';
         $output .= generate_unit_illustration_column($relTypeId, $unit_type, $m2, $m3, $container_type, $partner);
         $output .= generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_type, $partner);
@@ -106,11 +105,7 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
 
         $output .= generate_navigation_column($partner);
 
-        // if ($partner) {
-        //     $output .= '</a>';
-        // } else {
-        //     $output .= '</div>';
-        // }
+        // $output .=  generate_booking_form();
 
         if ($isArchivePage) {
             if ($partner) {
@@ -575,4 +570,41 @@ function getRelTypeId_unitlist($id)
     } else {
         return $relType;
     }
+}
+
+function generate_booking_form()
+{
+    $form = '<div id="form1" class="form-section">
+    <form class="reservation-form">
+    <div class="form-field">
+      <label for="first-name">First name</label>
+      <input type="text" id="first-name" name="first_name" required>
+    </div>
+    
+    <div class="form-field">
+      <label for="last-name">Last name</label>
+      <input type="text" id="last-name" name="last_name" required>
+    </div>
+    
+    <div class="form-field">
+      <label for="email">Email address</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+    
+    <div class="form-field">
+      <label for="phone">Phone number</label>
+      <input type="tel" id="phone" name="phone" required>
+    </div>
+    
+    <div class="form-field">
+      <label for="move-in-date">Move-in date</label>
+      <input type="date" id="move-in-date" name="move_in_date" required>
+    </div>
+    
+    <div class="form-field">
+      <input type="submit" value="Complete reservation">
+    </div>
+  </form>
+  </div>';
+    return $form;
 }
