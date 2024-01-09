@@ -4,7 +4,7 @@
 // Define the shortcode and the function to execute when the shortcode is used.
 function custom_depotrum_list_func()
 {
-    xdebug_break();
+    // xdebug_break();
     //echo plugin_dir_path(__FILE__) . '../tdp-common/tdp-common-plugin.php';
     $current_pod = pods();
 
