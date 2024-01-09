@@ -4,7 +4,7 @@
 // Define the shortcode and the function to execute when the shortcode is used.
 function custom_depotrum_list_func()
 {
-    // xdebug_break();
+    xdebug_break();
     //echo plugin_dir_path(__FILE__) . '../tdp-common/tdp-common-plugin.php';
     $current_pod = pods();
 
@@ -98,7 +98,7 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
 
         $output .= '<div class="flex-container">';
         $output .= generate_unit_illustration_column($relTypeId, $unit_type, $m2, $m3, $container_type, $partner);
-        $output .= generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_typem, $partner);
+        $output .= generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_type, $partner);
 
         $output .= '</div>';
 
