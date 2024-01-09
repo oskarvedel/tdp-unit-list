@@ -40,6 +40,10 @@ add_shortcode("custom_depotrum_list", "custom_depotrum_list_func");
 
 function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit_items, $permalink)
 {
+    $isArchivePage = 0;
+    if (geodir_is_page('post_type') || geodir_is_page('search')) {
+        $isArchivePage = 1;
+    }
     $sorted_ids = [];
     try {
         $sorted_ids = sort_depotrum_by_price($available_unit_items);
@@ -69,11 +73,19 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
         $ventilated_container = get_post_meta($relTypeId, 'ventilated_container', true);
         $price = get_post_meta($id, 'price', true);
 
-        if ($partner) {
-            if ($depotrum === $lastElement) {
-                $output = '<a href="' . $permalink . '" class="depotrum-row partner last">';
+        if ($isArchivePage) {
+            if ($partner) {
+                if ($depotrum === $lastElement) {
+                    $output = '<a href="' . $permalink . '" class="depotrum-row partner last">';
+                } else {
+                    $output = '<a href="' . $permalink . '" class="depotrum-row partner">';
+                }
             } else {
-                $output = '<a href="' . $permalink . '" class="depotrum-row partner">';
+                if ($depotrum === $lastElement) {
+                    $output = '<div class="depotrum-row non-partner last">';
+                } else {
+                    $output = '<div class="depotrum-row non-partner">';
+                }
             }
         } else {
             if ($depotrum === $lastElement) {
@@ -82,6 +94,7 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
                 $output = '<div class="depotrum-row non-partner">';
             }
         }
+
 
         $output .= '<div class="flex-container">';
         $output .= generate_unit_illustration_column($relTypeId, $unit_type, $m2, $m3, $container_type, $partner);
@@ -93,8 +106,18 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
 
         $output .= generate_navigation_column($partner);
 
-        if ($partner) {
-            $output .= '</a>';
+        // if ($partner) {
+        //     $output .= '</a>';
+        // } else {
+        //     $output .= '</div>';
+        // }
+
+        if ($isArchivePage) {
+            if ($partner) {
+                $output .= '</a>';
+            } else {
+                $output .= '</div>';
+            }
         } else {
             $output .= '</div>';
         }
