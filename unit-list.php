@@ -4,29 +4,25 @@
 // Define the shortcode and the function to execute when the shortcode is used.
 function custom_depotrum_list_func()
 {
-    xdebug_break();
     //echo plugin_dir_path(__FILE__) . '../tdp-common/tdp-common-plugin.php';
     $current_pod = pods();
 
     // Check if the Pod object exists and the field "partner" is set
     if ($current_pod && $current_pod->exists()) {
-        $unit_items = $current_pod->field("depotrum");
-        // check if each unit item is avaliable
-        $available_unit_items = [];
-        foreach ($unit_items as $unit_item) {
-            if (get_post_meta($unit_item['ID'], 'available', true)) {
-                array_push($available_unit_items, $unit_item);
-            }
-        }
+        $depotrum_items = $current_pod->field("depotrum");
         $hide_units = $current_pod->field("hide_units");
 
-        if ($available_unit_items && !empty($available_unit_items) && !$hide_units) {
+        if ($depotrum_items && !empty($depotrum_items) && !$hide_units) {
             $partner = $current_pod->field("partner");
             $lokationId = $current_pod->field("id");
             $permalink = get_permalink($lokationId);
 
             $finalOutput = '<div class="depotrum-list">';
-            $finalOutput .= generate_unit_list($finalOutput, $partner, $lokationId, $available_unit_items, $permalink);
+            if ($partner == 1) {
+                $finalOutput .= generate_unit_list($finalOutput, $partner, $lokationId, $depotrum_items, $permalink);
+            } else {
+                $finalOutput .= generate_non_partner_text($finalOutput);
+            }
             $finalOutput .= "</div>";
 
             $finalOutput .= generate_view_all_button($permalink, $partner);
@@ -38,16 +34,16 @@ function custom_depotrum_list_func()
 // Register the shortcode.
 add_shortcode("custom_depotrum_list", "custom_depotrum_list_func");
 
-function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit_items, $permalink)
+function generate_unit_list($finalOutput, $partner, $lokationId, $depotrum_items, $permalink)
 {
     $sorted_ids = [];
     try {
-        $sorted_ids = sort_depotrum_by_price($available_unit_items);
+        $sorted_ids = sort_depotrum_by_price($depotrum_items);
     } catch (Exception $e) {
         try {
-            $sorted_ids = sort_depotrum_by_m2_size($available_unit_items);
+            $sorted_ids = sort_depotrum_by_m2_size($depotrum_items);
         } catch (Exception $e) {
-            $sorted_ids = sort_depotrum_by_m3_size($available_unit_items);
+            $sorted_ids = sort_depotrum_by_m3_size($depotrum_items);
         }
     }
 
@@ -56,50 +52,34 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
     }
     $OutputArray = [];
     $output = '';
-    $lastElement = end($sorted_ids);
     foreach ($sorted_ids as $depotrum) {
         $id = $depotrum->id;
-        $relTypeId = getRelTypeId_unitlist($id);
-        $unit_type = get_post_meta($relTypeId, 'unit_type', true);
-        $m2 = get_post_meta($relTypeId, 'm2', true);
-        $m3 = get_post_meta($relTypeId, 'm3', true);
+        if (get_post_meta($id, 'available', true)) {
+            $relTypeId = getRelTypeId_unitlist($id);
+            $unit_type = get_post_meta($relTypeId, 'unit_type', true);
+            $m2 = get_post_meta($relTypeId, 'm2', true);
+            $m3 = get_post_meta($relTypeId, 'm3', true);
 
-        $container_type = get_post_meta($relTypeId, 'container_type', true);
-        $isolated_container = get_post_meta($relTypeId, 'isolated_container', true);
-        $ventilated_container = get_post_meta($relTypeId, 'ventilated_container', true);
-        $price = get_post_meta($id, 'price', true);
+            $container_type = get_post_meta($relTypeId, 'container_type', true);
+            $isolated_container = get_post_meta($relTypeId, 'isolated_container', true);
+            $ventilated_container = get_post_meta($relTypeId, 'ventilated_container', true);
+            $price = get_post_meta($id, 'price', true);
 
-        if ($partner) {
-            if ($depotrum === $lastElement) {
-                $output = '<a href="' . $permalink . '" class="depotrum-row partner last">';
-            } else {
-                $output = '<a href="' . $permalink . '" class="depotrum-row partner">';
-            }
-        } else {
-            if ($depotrum === $lastElement) {
-                $output = '<div class="depotrum-row non-partner last">';
-            } else {
-                $output = '<div class="depotrum-row non-partner">';
-            }
-        }
+            $output = '<a href="' . $permalink . '" class="depotrum-row">';
+            $output .= '<div class="flex-container">';
+            $output .= generate_unit_illustration_column($relTypeId, $unit_type, $m2, $m3, $container_type);
+            $output .= generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_type);
 
-        $output .= '<div class="flex-container">';
-        $output .= generate_unit_illustration_column($relTypeId, $unit_type, $m2, $m3, $container_type, $partner);
-        $output .= generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_typem, $partner);
-
-        $output .= '</div>';
-
-        $output .= generate_price_column($price, $partner);
-
-        $output .= generate_navigation_column($partner);
-
-        if ($partner) {
-            $output .= '</a>';
-        } else {
             $output .= '</div>';
-        }
 
-        array_push($OutputArray, $output);
+            $output .= generate_price_column($price);
+
+            $output .= generate_navigation_column($partner);
+
+            $output .= '</a>';
+
+            array_push($OutputArray, $output);
+        }
     }
     foreach ($OutputArray as $arrayItem) {
         $finalOutput .= $arrayItem;
@@ -122,29 +102,22 @@ function generate_view_all_button($permalink, $partner)
 function generate_navigation_column($partner)
 {
     $output = '<div class="navigation-column vertical-center">';
-    if ((geodir_is_page('post_type') || geodir_is_page('search')) && $partner) { //search or archive page + partner
+    if ($partner && !geodir_is_page('post_type') && !geodir_is_page('search')) {
+        // $output .= do_shortcode('[gd_ninja_forms form_id="5" text="Fortsæt" post_contact="1" output="button" bg_color="#FF3369" txt_color="#ffffff" size="h5" css_class="ninja-forms-book-button"]');
+    } else {
         $output .= '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25">';
         $output .= '<path d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z" />';
         $output .= '</svg>';
-    } else if (geodir_is_page('post_type') || geodir_is_page('search') && !$partner) { //search or archive page + non-partner
-        $output .= '';
-    } else if (!geodir_is_page('post_type') || !geodir_is_page('search') && $partner) { //department page + partner
-        //booking btn (to be developed)
-        // $output .= do_shortcode('[gd_ninja_forms form_id="5" text="Fortsæt" post_contact="1" output="button" bg_color="#FF3369" txt_color="#ffffff" size="h5" css_class="ninja-forms-book-button"]');
-    } else if (!geodir_is_page('post_type') || !geodir_is_page('search') && !$partner) { //department page + non-partner
-        $output .= '';
     }
     $output .= '</div>';
     return $output;
 }
 
-function generate_price_column($price, $partner)
+function generate_price_column($price)
 {
     $output = '<div class="price-column vertical-center">';
-    if ($price && $partner) {
-        $output .= '<span class="price partner">' . round($price, 2) . ' kr.</span>';
-    } else if ($price && !$partner) {
-        $output .= '<span class="price non-partner">' . round($price, 2) . ' kr.</span>';
+    if ($price) {
+        $output .= '<span class="price">' . round($price, 2) . ' kr.</span>';
     } else {
         $output .= '<span class="month">Pris ukendt</span>';
     }
@@ -152,13 +125,13 @@ function generate_price_column($price, $partner)
     return $output;
 }
 
-function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_type, $partner)
+function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_type)
 {
     $output = '<div class="size-column vertical-center">';
 
     if ($unit_type == "container") {
         if ($container_type == "8 feet") {
-            $output .= '<span class="big">8-fods container</span>';
+            $output .= '<span class="bignormal">8-fods container</span>';
             $output .= '<div class="break"></div>';
             if ($m2 && $m3) {
                 $output .= '<span class="detaileddesc">8-fods container på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
@@ -168,7 +141,7 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
                 $output .= '<span class="detaileddesc">8-fods container på ' . number_format($m3, 1, ',', '') . 'm³</span>';
             }
         } else if ($container_type == "10 feet") {
-            $output .= '<span class="big">10-fods container</span>';
+            $output .= '<span class="bignormal">10-fods container</span>';
             $output .= '<div class="break"></div>';
             if ($m2 && $m3) {
                 $output .= '<span class="detaileddesc">10-fods container på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
@@ -178,7 +151,7 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
                 $output .= '<span class="detaileddesc">10-fods container på ' . number_format($m3, 1, ',', '') . 'm³</span>';
             }
         } else if ($container_type == "20 feet") {
-            $output .= '<span class="big">20-fods container</span>';
+            $output .= '<span class="bignormal">20-fods container</span>';
             $output .= '<div class="break"></div>';
             if ($m2 && $m3) {
                 $output .= '<span class="detaileddesc">20-fods container på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
@@ -188,7 +161,7 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
                 $output .= '<span class="detaileddesc">20-fods container på ' . number_format($m3, 1, ',', '') . 'm³</span>';
             }
         } else if ($container_type == "20 feet high cube") {
-            $output .= '<span class="big">20-fods container</span>';
+            $output .= '<span class="bignormal">20-fods container</span>';
             $output .= '<div class="break"></div>';
             if ($m2 && $m3) {
                 $output .= '<span class="detaileddesc">20-fods container på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
@@ -198,7 +171,7 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
                 $output .= '<span class="detaileddesc">20-fods container på ' . number_format($m3, 1, ',', '') . 'm³</span>';
             }
         } else if ($container_type == "40 feet") {
-            $output .= '<span class="big">40-fods container</span>';
+            $output .= '<span class="bignormal">40-fods container</span>';
             $output .= '<div class="break"></div>';
             if ($m2 && $m3) {
                 $output .= '<span class="detaileddesc">40-fods container på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
@@ -208,8 +181,8 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
                 $output .= '<span class="detaileddesc">40-fods container på ' . number_format($m3, 1, ',', '') . 'm³</span>';
             }
         } else if ($container_type == "40 feet high cube") {
-            $output .= '<div class="big vertical-center">';
-            $output .= '<span class="big">40-fods container</span>';
+            $output .= '<div class="bignormal vertical-center">';
+            $output .= '<span class="bignormal">40-fods container</span>';
             $output .= '</div>';
             $output .= '<div class="break"></div>';
             if ($m2 && $m3) {
@@ -242,41 +215,23 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
         }
     } else if ($unit_type == "indoor") {
         if ($m2 && $m3) {
-            $output .= generate_unit_size_smallbold_text($m2, $m3, $partner);
+            $output .= generate_unit_size_smallbold_text($m2, $m3);
             $output .= '<div class="break"></div>';
-            if ($partner) {
-                $output .= '<span class="bigbold">' . number_format($m2, 1, ',', '') . ' m²</span>';
-            } else {
-                $output .= '<span class="normal">' . number_format($m2, 1, ',', '') . ' m²</span>';
-            }
+            $output .= '<span class="bigbold">' . number_format($m2, 1, ',', '') . ' m²</span>';
             $output .= '<div class="break"></div>';
-            if ($partner) {
-                $output .= '<span class="detaileddesc">Indendørs depotrum på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
-            }
+            $output .= '<span class="detaileddesc">Indendørs depotrum på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
         } else if ($m2) {
-            $output .= generate_unit_size_smallbold_text($m2, $m3, $partner);
+            $output .= generate_unit_size_smallbold_text($m2, $m3);
             $output .= '<div class="break"></div>';
-            if ($partner) {
-                $output .= '<span class="bigbold">' . number_format($m2, 1, ',', '') . ' m²</span>';
-            } else {
-                $output .= '<span class="big">' . number_format($m2, 1, ',', '') . ' m²</span>';
-            }
+            $output .= '<span class="bigbold">' . number_format($m2, 1, ',', '') . ' m²</span>';
             $output .= '<div class="break"></div>';
-            if ($partner) {
-                $output .= '<span class="detaileddesc">Indendørs depotrum på ' . number_format($m2, 1, ',', '') . ' m²</span>';
-            }
+            $output .= '<span class="detaileddesc">Indendørs depotrum på ' . number_format($m2, 1, ',', '') . ' m²</span>';
         } else if ($m3) {
-            $output .= generate_unit_size_smallbold_text($m2, $m3, $partner);
+            $output .= generate_unit_size_smallbold_text($m2, $m3);
             $output .= '<div class="break"></div>';
-            if ($partner) {
-                $output .= '<span class="bigbold">' . number_format($m3, 1, ',', '') . ' m³</span>';
-            } else {
-                $output .= '<span class="big">' . number_format($m3, 1, ',', '') . ' m³</span>';
-            }
+            $output .= '<span class="bigbold">' . number_format($m3, 1, ',', '') . ' m³</span>';
             $output .= '<div class="break"></div>';
-            if ($partner) {
-                $output .= '<span class="detaileddesc">Indendørs depotrum på ' . number_format($m3, 1, ',', '') . ' m³</span>';
-            }
+            $output .= '<span class="detaileddesc">Indendørs depotrum på ' . number_format($m3, 1, ',', '') . ' m³</span>';
         }
     }
 
@@ -285,11 +240,8 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
     return $output;
 }
 
-function generate_unit_size_smallbold_text($m2, $m3, $partner)
+function generate_unit_size_smallbold_text($m2, $m3)
 {
-    if (!$partner) {
-        return '';
-    }
     if ($m2) {
         $m2 = floatval($m2); // Convert m2 to integer if it's a string
         if ($m2 <= 1) {
@@ -335,11 +287,8 @@ function generate_unit_size_smallbold_text($m2, $m3, $partner)
     return $output;
 }
 
-function generate_unit_illustration_column($relTypeId, $unit_type, $m2, $m3, $container_type, $partner)
+function generate_unit_illustration_column($relTypeId, $unit_type, $m2, $m3, $container_type)
 {
-    if (!$partner) {
-        return '';
-    }
     if ($unit_type == "container") {
         if ($container_type == "8 feet") {
             $image_url = plugins_url('size-illustrations/10-feet-container-orig.png', __FILE__);
@@ -444,12 +393,12 @@ function generate_non_partner_text($finalOutput)
     return $finalOutput;
 }
 
-function sort_depotrum_by_price($available_unit_items)
+function sort_depotrum_by_price($depotrum_items)
 {
     // Get all depotrum and sort by price
     $AllDepotrumArray = [];
 
-    foreach ($available_unit_items as $depotrum) {
+    foreach ($depotrum_items as $depotrum) {
 
         $id = $depotrum['ID'];
         $arrayObject = (object) [
@@ -472,11 +421,11 @@ function sort_depotrum_by_price($available_unit_items)
     return $AllDepotrumArray;
 }
 
-function sort_depotrum_by_m2_size($available_unit_items)
+function sort_depotrum_by_m2_size($depotrum_items)
 {
     $AllDepotrumArray = [];
 
-    foreach ($available_unit_items as $depotrum) {
+    foreach ($depotrum_items as $depotrum) {
 
         $id = $depotrum['ID'];
         $relTypeId = getRelTypeId_unitlist($id);
@@ -499,11 +448,11 @@ function sort_depotrum_by_m2_size($available_unit_items)
     return $AllDepotrumArray;
 }
 
-function sort_depotrum_by_m3_size($available_unit_items)
+function sort_depotrum_by_m3_size($depotrum_items)
 {
     $AllDepotrumArray = [];
 
-    foreach ($available_unit_items as $depotrum) {
+    foreach ($depotrum_items as $depotrum) {
 
         $id = $depotrum['ID'];
         $relTypeId = getRelTypeId_unitlist($id);
