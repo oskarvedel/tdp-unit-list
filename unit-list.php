@@ -18,15 +18,16 @@ function custom_depotrum_list_func()
                 array_push($available_unit_items, $unit_item);
             }
         }
-        $hide_units = $current_pod->field("hide_units");
-
-        if ($available_unit_items && !empty($available_unit_items) && !$hide_units) {
+        $show_units = $current_pod->field("show_units");
+        $enable_booking = $current_pod->field("enable_booking");
+        xdebug_break();
+        if ($available_unit_items && !empty($available_unit_items) && $show_units) {
             $partner = $current_pod->field("partner");
             $lokationId = $current_pod->field("id");
             $permalink = get_permalink($lokationId);
 
             $finalOutput = '<div class="depotrum-list">';
-            $finalOutput .= generate_unit_list($finalOutput, $partner, $lokationId, $available_unit_items, $permalink);
+            $finalOutput .= generate_unit_list($finalOutput, $partner, $lokationId, $available_unit_items, $permalink, $enable_booking);
             $finalOutput .= "</div>";
 
             $finalOutput .= generate_view_all_button($permalink, $partner);
@@ -38,7 +39,7 @@ function custom_depotrum_list_func()
 // Register the shortcode.
 add_shortcode("custom_depotrum_list", "custom_depotrum_list_func");
 
-function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit_items, $permalink)
+function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit_items, $permalink, $enable_booking)
 {
     $isArchivePage = 0;
     if (geodir_is_page('post_type') || geodir_is_page('search')) {
@@ -73,25 +74,35 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
         $ventilated_container = get_post_meta($relTypeId, 'ventilated_container', true);
         $price = get_post_meta($id, 'price', true);
 
+        $output = '<div class="outer-depotrum-row">';
+
         if ($isArchivePage) {
             if ($partner) {
                 if ($depotrum === $lastElement) {
-                    $output = '<a href="' . $permalink . '" class="depotrum-row partner last">';
+                    $output .= '<a href="' . $permalink . '" class="depotrum-row yellowhover partner last">';
                 } else {
-                    $output = '<a href="' . $permalink . '" class="depotrum-row partner">';
+                    $output .= '<a href="' . $permalink . '" class="depotrum-row yellowhover partner">';
                 }
             } else {
                 if ($depotrum === $lastElement) {
-                    $output = '<div class="depotrum-row non-partner last">';
+                    $output .= '<div class="depotrum-row non-partner last">';
                 } else {
-                    $output = '<div class="depotrum-row non-partner">';
+                    $output .= '<div class="depotrum-row non-partner">';
                 }
             }
         } else {
-            if ($depotrum === $lastElement) {
-                $output = '<div class="depotrum-row non-partner last">';
+            if ($partner) {
+                if ($depotrum === $lastElement) {
+                    $output .= '<div class="depotrum-row partner yellowhover last">';
+                } else {
+                    $output .= '<div class="depotrum-row yellowhover partner">';
+                }
             } else {
-                $output = '<div class="depotrum-row non-partner">';
+                if ($depotrum === $lastElement) {
+                    $output .= '<div class="depotrum-row non-partner last">';
+                } else {
+                    $output .= '<div class="depotrum-row non-partner">';
+                }
             }
         }
 
@@ -103,9 +114,7 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
 
         $output .= generate_price_column($price, $partner);
 
-        $output .= generate_navigation_column($partner);
-
-        // $output .=  generate_booking_form();
+        $output .= generate_navigation_column($partner, $id, $enable_booking);
 
         if ($isArchivePage) {
             if ($partner) {
@@ -117,6 +126,12 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
             $output .= '</div>';
         }
 
+        if ($partner && !$isArchivePage) {
+            $output .=  generate_booking_form($id);
+        }
+
+        $output .= '</div>';
+
         array_push($OutputArray, $output);
     }
     foreach ($OutputArray as $arrayItem) {
@@ -127,7 +142,7 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
 
 function generate_view_all_button($permalink, $partner)
 {
-    if ((geodir_is_page('post_type') || geodir_is_page('search')) && $partner == 1) {
+    if ((geodir_is_page('post_type') || geodir_is_page('search')) && $partner) {
         $finalOutput = '<form action="' . $permalink . '">';
         $finalOutput .= '<input type="submit" class="view-all-button" value="Se alle priser" />';
         $finalOutput .= '</form>';
@@ -137,20 +152,15 @@ function generate_view_all_button($permalink, $partner)
     }
 }
 
-function generate_navigation_column($partner)
+function generate_navigation_column($partner, $unitId, $enable_booking)
 {
-    $output = '<div class="navigation-column vertical-center">';
+    $output = '<div class="navigation-column vertical-center" onclick="toggleFold(' . $unitId . ')">';
     if ((geodir_is_page('post_type') || geodir_is_page('search')) && $partner) { //search or archive page + partner
         $output .= '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25">';
         $output .= '<path d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z" />';
         $output .= '</svg>';
-    } else if (geodir_is_page('post_type') || geodir_is_page('search') && !$partner) { //search or archive page + non-partner
-        $output .= '';
-    } else if (!geodir_is_page('post_type') || !geodir_is_page('search') && $partner) { //department page + partner
-        //booking btn (to be developed)
-        // $output .= do_shortcode('[gd_ninja_forms form_id="5" text="Fortsæt" post_contact="1" output="button" bg_color="#FF3369" txt_color="#ffffff" size="h5" css_class="ninja-forms-book-button"]');
-    } else if (!geodir_is_page('post_type') || !geodir_is_page('search') && !$partner) { //department page + non-partner
-        $output .= '';
+    } else if ((!geodir_is_page('post_type') || !geodir_is_page('search')) && $partner && $enable_booking) { //listing page + partner
+        $output .=  '<div class="continue-button" id="continue-button-' .  $unitId . '">Fortsæt</div>';
     }
     $output .= '</div>';
     return $output;
@@ -161,7 +171,7 @@ function generate_price_column($price, $partner)
     $output = '<div class="price-column vertical-center">';
     if ($price && $partner) {
         $output .= '<span class="price partner">' . round($price, 2) . ' kr.</span>';
-    } else if ($price && !$partner) {
+    } else if ($price && $partner != 1) {
         $output .= '<span class="price non-partner">' . round($price, 2) . ' kr.</span>';
     } else {
         $output .= '<span class="month">Pris ukendt</span>';
@@ -305,7 +315,7 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
 
 function generate_unit_size_smallbold_text($m2, $m3, $partner)
 {
-    if (!$partner) {
+    if ($partner != 1) {
         return '';
     }
     if ($m2) {
@@ -355,7 +365,7 @@ function generate_unit_size_smallbold_text($m2, $m3, $partner)
 
 function generate_unit_illustration_column($relTypeId, $unit_type, $m2, $m3, $container_type, $partner)
 {
-    if (!$partner) {
+    if ($partner != 1) {
         return '';
     }
     if ($unit_type == "container") {
@@ -572,39 +582,61 @@ function getRelTypeId_unitlist($id)
     }
 }
 
-function generate_booking_form()
+
+function generate_booking_form($unitId)
 {
-    $form = '<div id="form1" class="form-section">
-    <form class="reservation-form">
-    <div class="form-field">
-      <label for="first-name">First name</label>
-      <input type="text" id="first-name" name="first_name" required>
+    $form = '
+    <div class="foldableDiv" id="foldableDiv-' . $unitId . '" style="max-height: 0px;">
+
+    <div class="lock-in-rate">
+    <img src="' . esc_url(plugins_url('img/clock.svg', __FILE__)) . '" alt="Clock Icon" class="clock-icon" />
+    Reserver nu til denne pris. Ingen binding.
+  </div>
+
+
+    <form method="post" id="booking_form" class="booking_form">
+
+    <div class="form-row">
+      <input type="text" id="first-name" name="first_name" placeholder="Fornavn" required>
+
+      <input type="text" id="last-name" name="last_name" placeholder="Efternavn" required>
     </div>
     
-    <div class="form-field">
-      <label for="last-name">Last name</label>
-      <input type="text" id="last-name" name="last_name" required>
+    <div class="form-row">
+      <input type="email" id="email" name="email" placeholder="Email adresse" required>
+      <input type="tel" id="phone" name="phone" placeholder="Telefon" required>
+    </div>
+
+    <div class="form-row">
+<div class="custom-select-wrapper">
+    <div class="custom-select">
+        <select class="custom-select__trigger">Indflytningsdato<span></span>
+            <div class="arrow"></div>
+        </select>
+        <div class="custom-options">
+            <!-- JavaScript will populate this area with date options -->
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="form-row">
+<p class="date-selection-instruction">
+Hvis du er usikker på din indflytningsdato, så vælg en estimeret dato. Den kan ændres senere.
+</p>
+</div>
+
+    <div class="form-row center-items">
+    <input type="submit" value="Reservér">
     </div>
     
-    <div class="form-field">
-      <label for="email">Email address</label>
-      <input type="email" id="email" name="email" required>
-    </div>
-    
-    <div class="form-field">
-      <label for="phone">Phone number</label>
-      <input type="tel" id="phone" name="phone" required>
-    </div>
-    
-    <div class="form-field">
-      <label for="move-in-date">Move-in date</label>
-      <input type="date" id="move-in-date" name="move_in_date" required>
-    </div>
-    
-    <div class="form-field">
-      <input type="submit" value="Complete reservation">
-    </div>
   </form>
   </div>';
     return $form;
+
+    $oldCustomDatePicker = '<div class="custom-date-picker">
+    <div class="selected-date" id="selected-date" onclick="toggleDatePicker()">Indflytningsdato</div>
+    <ul class="date-list" id="date-list" style="display: none;"></ul>
+  </div>
+   </div>';
 }
