@@ -86,7 +86,7 @@ function toggleFold(unitId) {
   var formdiv = document.getElementById("foldableDiv-" + unitId);
   var continue_button = document.getElementById("continue-button-" + unitId);
   if (formdiv.style.maxHeight === "0px") {
-    formdiv.style.maxHeight = "400px"; // or the full height of the content
+    formdiv.style.maxHeight = "500px"; // or the full height of the content
     formdiv.style.paddingTop = "1rem"; // or the full height of the content
     continue_button.style.backgroundColor = "#eaeaea";
     // remove the hover effect on .depotrum-row

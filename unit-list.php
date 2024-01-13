@@ -5,11 +5,16 @@
 function custom_depotrum_list_func()
 {
     // xdebug_break();
-    //echo plugin_dir_path(__FILE__) . '../tdp-common/tdp-common-plugin.php';
+
     $current_pod = pods();
+
 
     // Check if the Pod object exists and the field "partner" is set
     if ($current_pod && $current_pod->exists()) {
+        $show_units = $current_pod->field("show_units");
+        if (!$show_units) {
+            return '';
+        }
         $unit_items = $current_pod->field("depotrum");
         // check if each unit item is avaliable
         $available_unit_items = [];
@@ -18,16 +23,15 @@ function custom_depotrum_list_func()
                 array_push($available_unit_items, $unit_item);
             }
         }
-        $show_units = $current_pod->field("show_units");
+
         $enable_booking = $current_pod->field("enable_booking");
         if ($available_unit_items && !empty($available_unit_items) && $show_units) {
             $partner = $current_pod->field("partner");
             $lokationId = $current_pod->field("id");
             $permalink = get_permalink($lokationId);
 
-            $finalOutput = '<div class="depotrum-list">';
+            $finalOutput = '';
             $finalOutput .= generate_unit_list($finalOutput, $partner, $lokationId, $available_unit_items, $permalink, $enable_booking);
-            $finalOutput .= "</div>";
 
             $finalOutput .= generate_view_all_button($permalink, $partner);
             return $finalOutput;
@@ -58,6 +62,8 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
     if (geodir_is_page('post_type') || geodir_is_page('search')) {
         $sorted_ids = extract_evenly_spaced($sorted_ids, 4);
     }
+
+    $finalOutput .= '<div class="depotrum-list">';
     $OutputArray = [];
     $output = '';
     $lastElement = end($sorted_ids);
@@ -136,6 +142,7 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
     foreach ($OutputArray as $arrayItem) {
         $finalOutput .= $arrayItem;
     }
+    $finalOutput .= "</div>";
     return $finalOutput;
 }
 
@@ -610,32 +617,30 @@ function generate_booking_form($unitId)
 <div class="custom-select-wrapper">
     <div class="custom-select">
         <select class="custom-select__trigger">Indflytningsdato<span></span>
-            <div class="arrow"></div>
         </select>
         <div class="custom-options">
             <!-- JavaScript will populate this area with date options -->
         </div>
+        <div class="dropdown-icon"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="10" viewBox="0 0 15 10" class="svg chevron-down"><path d="M7.5 10a1.5 1.5 0 0 1-1.14-.52l-6-7a1.5 1.5 0 1 1 2.28-2L7.5 6.2 12.36.52a1.5 1.5 0 1 1 2.28 2l-6 7A1.5 1.5 0 0 1 7.5 10z"></path></svg></div>
     </div>
 </div>
 </div>
 
 <div class="form-row">
-<p class="date-selection-instruction">
-Hvis du er usikker på din indflytningsdato, så vælg en estimeret dato. Den kan ændres senere.
+<p class="instruction">
+Hvis du er usikker på din indflytningsdato, så vælg en cirkadato. Du binder dig ikke til denne dato.
 </p>
 </div>
 
     <div class="form-row center-items">
     <input type="submit" value="Reservér">
     </div>
+
+    <p class="instruction full-width">
+    Hvis du er usikker på din indflytningsdato, så vælg en cirkadato. Du binder dig ikke til denne dato.
+    </p>
     
   </form>
   </div>';
     return $form;
-
-    $oldCustomDatePicker = '<div class="custom-date-picker">
-    <div class="selected-date" id="selected-date" onclick="toggleDatePicker()">Indflytningsdato</div>
-    <ul class="date-list" id="date-list" style="display: none;"></ul>
-  </div>
-   </div>';
 }
