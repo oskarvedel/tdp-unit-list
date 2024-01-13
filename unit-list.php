@@ -20,7 +20,6 @@ function custom_depotrum_list_func()
         }
         $show_units = $current_pod->field("show_units");
         $enable_booking = $current_pod->field("enable_booking");
-        xdebug_break();
         if ($available_unit_items && !empty($available_unit_items) && $show_units) {
             $partner = $current_pod->field("partner");
             $lokationId = $current_pod->field("id");
