@@ -16,6 +16,9 @@ function custom_depotrum_list_func()
             return '';
         }
         $unit_items = $current_pod->field("depotrum");
+        if (!$unit_items) {
+            return '';
+        }
         // check if each unit item is avaliable
         $available_unit_items = [];
         foreach ($unit_items as $unit_item) {
