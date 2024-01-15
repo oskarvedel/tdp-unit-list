@@ -4,7 +4,6 @@
 // Define the shortcode and the function to execute when the shortcode is used.
 function custom_depotrum_list_func()
 {
-    // xdebug_break();
 
     $current_pod = pods();
 
