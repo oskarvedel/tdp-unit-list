@@ -8,7 +8,6 @@ function custom_depotrum_list_func()
 
     $current_pod = pods();
 
-
     // Check if the Pod object exists and the field "partner" is set
     if ($current_pod && $current_pod->exists()) {
         $show_units = $current_pod->field("show_units");
@@ -66,7 +65,12 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
         $sorted_ids = extract_evenly_spaced($sorted_ids, 4);
     }
 
-    $finalOutput .= '<div class="depotrum-list">';
+    if ($isArchivePage) {
+        $finalOutput .= '<div class="depotrum-list no-border">';
+    } else {
+        $finalOutput .= '<div class="depotrum-list">';
+    }
+
     $OutputArray = [];
     $output = '';
     $lastElement = end($sorted_ids);
