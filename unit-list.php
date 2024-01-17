@@ -60,7 +60,6 @@ function generate_default_unit_list_for_single_gd_place($gd_place_id, $isArchive
 // Kind of depreceated since introducing default unit list
 function custom_depotrum_list_func()
 {
-
     $current_pod = pods();
 
     // Check if the Pod object exists and the field "partner" is set
