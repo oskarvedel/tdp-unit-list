@@ -19,7 +19,7 @@ function generate_default_unit_list_for_all_gd_places()
             update_post_meta($gd_place_id, 'default_department_page_unit_list', $default_department_page_unit_list);
         }
     }
-    trigger_error("Default unit list updated for all gd_places", E_USER_NOTICE);
+    trigger_error("Default unit lists updated for all gd_places", E_USER_NOTICE);
 }
 
 function generate_default_unit_list_for_single_gd_place($gd_place_id, $isArchivePage)
@@ -50,7 +50,7 @@ function generate_default_unit_list_for_single_gd_place($gd_place_id, $isArchive
         $permalink = get_permalink($lokationId);
 
         $finalOutput = '';
-        $finalOutput .= generate_unit_list($finalOutput, $partner, $gd_place_id, $available_unit_items, $permalink, $enable_bookingm, $isArchivePage);
+        $finalOutput .= generate_unit_list($finalOutput, $partner, $gd_place_id, $available_unit_items, $permalink, $enable_booking, $isArchivePage);
 
         $finalOutput .= generate_view_all_button($permalink, $partner, $isArchivePage);
         return $finalOutput;
