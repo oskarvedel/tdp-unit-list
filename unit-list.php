@@ -47,7 +47,7 @@ function generate_default_unit_list_for_single_gd_place($gd_place_id, $isArchive
     $enable_booking = get_post_meta($gd_place_id, 'enable_booking', true);
     if ($available_unit_items && !empty($available_unit_items) && $show_units) {
         $partner = get_post_meta($gd_place_id, 'partner', true);
-        $permalink = get_permalink($lokationId);
+        $permalink = get_permalink($gd_place_id);
 
         $finalOutput = '';
         $finalOutput .= generate_unit_list($finalOutput, $partner, $gd_place_id, $available_unit_items, $permalink, $enable_booking, $isArchivePage);
