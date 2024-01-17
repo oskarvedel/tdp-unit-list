@@ -1,7 +1,63 @@
 <?php
 
 
-// Define the shortcode and the function to execute when the shortcode is used.
+function generate_default_unit_list_for_all_gd_places()
+{
+    $gd_places = get_posts(array(
+        'post_type' => 'gd_place',
+        'posts_per_page' => -1,
+        'post_status' => 'publish',
+    ));
+    foreach ($gd_places as $gd_place) {
+        $gd_place_id = $gd_place->ID;
+        $default_archive_page_unit_list = generate_default_unit_list_for_single_gd_place($gd_place_id, 1);
+        if ($default_archive_page_unit_list) {
+            update_post_meta($gd_place_id, 'default_archive_page_unit_list', $default_archive_page_unit_list);
+        }
+        $default_department_page_unit_list = generate_default_unit_list_for_single_gd_place($gd_place_id, 0);
+        if ($default_department_page_unit_list) {
+            update_post_meta($gd_place_id, 'default_department_page_unit_list', $default_department_page_unit_list);
+        }
+    }
+    trigger_error("Default unit list updated for all gd_places", E_USER_NOTICE);
+}
+
+function generate_default_unit_list_for_single_gd_place($gd_place_id, $isArchivePage)
+{
+    // if ($gd_place_id == 1758) {
+    //     xdebug_break();
+    // }
+    $show_units = get_post_meta($gd_place_id, 'show_units', true);
+    if (!$show_units) {
+        return '';
+    }
+    $unit_items = get_post_meta($gd_place_id, 'depotrum', false);
+    if (!$unit_items) {
+        return '';
+    }
+
+    // check if each unit item is avaliable
+    $available_unit_items = [];
+    foreach ($unit_items as $unit_item) {
+        if (get_post_meta($unit_item['ID'], 'available', true)) {
+            array_push($available_unit_items, $unit_item);
+        }
+    }
+
+    $enable_booking = get_post_meta($gd_place_id, 'enable_booking', true);
+    if ($available_unit_items && !empty($available_unit_items) && $show_units) {
+        $partner = get_post_meta($gd_place_id, 'partner', true);
+        $permalink = get_permalink($lokationId);
+
+        $finalOutput = '';
+        $finalOutput .= generate_unit_list($finalOutput, $partner, $gd_place_id, $available_unit_items, $permalink, $enable_bookingm, $isArchivePage);
+
+        $finalOutput .= generate_view_all_button($permalink, $partner, $isArchivePage);
+        return $finalOutput;
+    }
+}
+
+// Kind of depreceated since introducing default unit list
 function custom_depotrum_list_func()
 {
 
@@ -34,7 +90,7 @@ function custom_depotrum_list_func()
             $finalOutput = '';
             $finalOutput .= generate_unit_list($finalOutput, $partner, $lokationId, $available_unit_items, $permalink, $enable_booking);
 
-            $finalOutput .= generate_view_all_button($permalink, $partner);
+            $finalOutput .= generate_view_all_button($permalink, $partner, 0);
             return $finalOutput;
         }
     }
@@ -43,12 +99,8 @@ function custom_depotrum_list_func()
 // Register the shortcode.
 add_shortcode("custom_depotrum_list", "custom_depotrum_list_func");
 
-function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit_items, $permalink, $enable_booking)
+function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit_items, $permalink, $enable_booking, $isArchivePage = 0)
 {
-    $isArchivePage = 0;
-    if (geodir_is_page('post_type') || geodir_is_page('search')) {
-        $isArchivePage = 1;
-    }
     $sorted_ids = [];
     try {
         $sorted_ids = sort_depotrum_by_price($available_unit_items);
@@ -60,7 +112,7 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
         }
     }
 
-    if (geodir_is_page('post_type') || geodir_is_page('search')) {
+    if ($isArchivePage) {
         $sorted_ids = extract_evenly_spaced($sorted_ids, 4);
     }
 
@@ -125,7 +177,7 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
 
         $output .= generate_price_column($price, $partner);
 
-        $output .= generate_navigation_column($partner, $id, $enable_booking);
+        $output .= generate_navigation_column($partner, $id, $enable_booking, $isArchivePage);
 
         if ($isArchivePage) {
             if ($partner) {
@@ -152,9 +204,9 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
     return $finalOutput;
 }
 
-function generate_view_all_button($permalink, $partner)
+function generate_view_all_button($permalink, $partner, $isArchivePage = 0)
 {
-    if ((geodir_is_page('post_type') || geodir_is_page('search')) && $partner) {
+    if ($isArchivePage && $partner) {
         $finalOutput = '<form action="' . $permalink . '">';
         $finalOutput .= '<input type="submit" class="view-all-button" value="Se alle priser" />';
         $finalOutput .= '</form>';
@@ -164,10 +216,10 @@ function generate_view_all_button($permalink, $partner)
     }
 }
 
-function generate_navigation_column($partner, $unitId, $enable_booking)
+function generate_navigation_column($partner, $unitId, $enable_booking, $isArchivePage)
 {
     $output = '<div class="navigation-column vertical-center" onclick="toggleFold(' . $unitId . ')">';
-    if ((geodir_is_page('post_type') || geodir_is_page('search')) && $partner) { //search or archive page + partner
+    if ($isArchivePage && $partner) { //search or archive page + partner
         $output .= '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25">';
         $output .= '<path d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z" />';
         $output .= '</svg>';
