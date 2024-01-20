@@ -126,6 +126,9 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
     $lastElement = end($sorted_ids);
     foreach ($sorted_ids as $depotrum) {
         $id = $depotrum->id;
+        // if ($id == 17914) {
+        //     xdebug_break();
+        // }
         $relTypeId = getRelTypeId_unitlist($id);
         $unit_type = get_post_meta($relTypeId, 'unit_type', true);
         $m2 = get_post_meta($relTypeId, 'm2', true);
