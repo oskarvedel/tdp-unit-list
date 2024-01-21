@@ -303,7 +303,6 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
             }
         } else if ($container_type == "40 feet high cube") {
             $output .= '<span class="big">40-fods container</span>';
-            $output .= '</div>';
             $output .= '<div class="break"></div>';
             if ($m2 && $m3) {
                 $output .= '<span class="detaileddesc">40-fods container på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
