@@ -45,60 +45,20 @@ function generate_default_unit_list_for_single_gd_place($gd_place_id, $isArchive
     }
 
     $enable_booking = get_post_meta($gd_place_id, 'enable_booking', true);
+    $enable_direct_booking = get_post_meta($gd_place_id, 'enable_direct_booking', true);
+
     if ($available_unit_items && !empty($available_unit_items) && $show_units) {
         $partner = get_post_meta($gd_place_id, 'partner', true);
         $permalink = get_permalink($gd_place_id);
 
         $finalOutput = '';
-        $finalOutput .= generate_unit_list($finalOutput, $partner, $gd_place_id, $available_unit_items, $permalink, $enable_booking, $isArchivePage);
-
+        $finalOutput .= generate_unit_list($finalOutput, $partner, $gd_place_id, $available_unit_items, $permalink, $enable_booking, $enable_direct_booking, $isArchivePage);
         $finalOutput .= generate_view_all_button($permalink, $partner, $isArchivePage);
         return $finalOutput;
     }
 }
 
-// Kind of depreceated since introducing default unit list
-function custom_depotrum_list_func()
-{
-    $current_pod = pods();
-
-    // Check if the Pod object exists and the field "partner" is set
-    if ($current_pod && $current_pod->exists()) {
-        $show_units = $current_pod->field("show_units");
-        if (!$show_units) {
-            return '';
-        }
-        $unit_items = $current_pod->field("depotrum");
-        if (!$unit_items) {
-            return '';
-        }
-        // check if each unit item is avaliable
-        $available_unit_items = [];
-        foreach ($unit_items as $unit_item) {
-            if (get_post_meta($unit_item['ID'], 'available', true)) {
-                array_push($available_unit_items, $unit_item);
-            }
-        }
-
-        $enable_booking = $current_pod->field("enable_booking");
-        if ($available_unit_items && !empty($available_unit_items) && $show_units) {
-            $partner = $current_pod->field("partner");
-            $lokationId = $current_pod->field("id");
-            $permalink = get_permalink($lokationId);
-
-            $finalOutput = '';
-            $finalOutput .= generate_unit_list($finalOutput, $partner, $lokationId, $available_unit_items, $permalink, $enable_booking);
-
-            $finalOutput .= generate_view_all_button($permalink, $partner, 0);
-            return $finalOutput;
-        }
-    }
-}
-
-// Register the shortcode.
-add_shortcode("custom_depotrum_list", "custom_depotrum_list_func");
-
-function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit_items, $permalink, $enable_booking, $isArchivePage = 0)
+function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit_items, $permalink, $enable_booking, $enable_direct_booking, $isArchivePage = 0)
 {
     $sorted_ids = [];
     try {
@@ -133,6 +93,8 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
         $unit_type = get_post_meta($relTypeId, 'unit_type', true);
         $m2 = get_post_meta($relTypeId, 'm2', true);
         $m3 = get_post_meta($relTypeId, 'm3', true);
+        $available_date = get_post_meta($id, 'available_date', true);
+        $booking_link = get_post_meta($id, 'booking_link', true);
 
         $container_type = get_post_meta($relTypeId, 'container_type', true);
         $isolated_container = get_post_meta($relTypeId, 'isolated_container', true);
@@ -191,8 +153,8 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
             $output .= '</div>';
         }
 
-        if ($partner && !$isArchivePage) {
-            $output .=  generate_booking_form($id);
+        if ($partner && !$isArchivePage && $enable_booking) {
+            $output .=  generate_booking_form($id, $available_date, $booking_link, $enable_direct_booking);
         }
 
         $output .= '</div>';
@@ -218,15 +180,15 @@ function generate_view_all_button($permalink, $partner, $isArchivePage = 0)
     }
 }
 
-function generate_navigation_column($partner, $unitId, $enable_booking, $isArchivePage)
+function generate_navigation_column($partner, $unit_id, $enable_booking, $isArchivePage)
 {
-    $output = '<div class="navigation-column vertical-center" onclick="toggleFold(' . $unitId . ')">';
+    $output = '<div class="navigation-column vertical-center" onclick="toggleFold(' . $unit_id . ')">';
     if ($isArchivePage && $partner) { //search or archive page + partner
         $output .= '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="25" height="25">';
         $output .= '<path d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z" />';
         $output .= '</svg>';
     } else if ((!geodir_is_page('post_type') || !geodir_is_page('search')) && $partner && $enable_booking) { //listing page + partner
-        $output .=  '<div class="continue-button" id="continue-button-' .  $unitId . '">Fortsæt</div>';
+        $output .=  '<div class="continue-button" id="continue-button-' .  $unit_id . '">Fortsæt</div>';
     }
     $output .= '</div>';
     return $output;
@@ -598,6 +560,7 @@ function sort_depotrum_by_m3_size($available_unit_items)
     foreach ($available_unit_items as $depotrum) {
 
         $id = $depotrum['ID'];
+
         $relTypeId = getRelTypeId_unitlist($id);
         $arrayObject = (object) [
             'id' => $id,
@@ -647,10 +610,10 @@ function getRelTypeId_unitlist($id)
 }
 
 
-function generate_booking_form($unitId)
+function generate_booking_form($unit_id, $available_date, $booking_link, $enable_direct_booking)
 {
     $form = '
-    <div class="foldableDiv" id="foldableDiv-' . $unitId . '" style="max-height: 0px;">
+    <div class="foldableDiv" id="foldableDiv-' . $unit_id . '" style="max-height: 0px;">
 
     <div class="lock-in-rate">
     <img src="' . esc_url(plugins_url('img/clock.svg', __FILE__)) . '" alt="Clock Icon" class="clock-icon" />
@@ -658,7 +621,11 @@ function generate_booking_form($unitId)
   </div>
 
 
-    <form method="post" id="booking_form" class="booking_form">
+    <form method="post" id="booking_form-' . $unit_id . '" class="booking_form">
+    <input type="text" class="move_in_date" id="move_in_date-' . $unit_id . '" name="move_in_date" readonly style="display: none;">
+    <input type="number" id="unit_id" name="unit_id" value="' . $unit_id . '" readonly style="display: none;">
+    <input type="hidden" id="enable_direct_booking" name="enable_direct_booking" value="' . $enable_direct_booking . '">
+    <input type="hidden" id="booking_link" name="booking_link" value="' . $booking_link . '">
 
     <div class="form-row">
       <input type="text" id="first-name" name="first_name" placeholder="Fornavn" required>
@@ -672,11 +639,12 @@ function generate_booking_form($unitId)
     </div>
 
     <div class="form-row">
+
 <div class="custom-select-wrapper">
     <div class="custom-select">
-        <select class="custom-select__trigger">Indflytningsdato<span></span>
+        <select class="custom-select__trigger" id="date-dropdown">Indflytningsdato
         </select>
-        <div class="custom-options">
+        <div class="dates">
             <!-- JavaScript will populate this area with date options -->
         </div>
         <div class="dropdown-icon"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="10" viewBox="0 0 15 10" class="svg chevron-down"><path d="M7.5 10a1.5 1.5 0 0 1-1.14-.52l-6-7a1.5 1.5 0 1 1 2.28-2L7.5 6.2 12.36.52a1.5 1.5 0 1 1 2.28 2l-6 7A1.5 1.5 0 0 1 7.5 10z"></path></svg></div>
@@ -695,10 +663,54 @@ Hvis du er usikker på din indflytningsdato, så vælg en cirkadato. Du binder d
     </div>
 
     <p class="instruction full-width">
-    Hvis du er usikker på din indflytningsdato, så vælg en cirkadato. Du binder dig ikke til denne dato.
+    Ingen forpligtelse til at leje.
     </p>
     
   </form>
   </div>';
     return $form;
 }
+
+
+// Kind of depreceated since introducing default unit list
+// function custom_depotrum_list_func()
+// {
+//     $current_pod = pods();
+
+//     // Check if the Pod object exists and the field "partner" is set
+//     if ($current_pod && $current_pod->exists()) {
+//         $show_units = $current_pod->field("show_units");
+//         if (!$show_units) {
+//             return '';
+//         }
+//         $unit_items = $current_pod->field("depotrum");
+//         if (!$unit_items) {
+//             return '';
+//         }
+//         // check if each unit item is avaliable
+//         $available_unit_items = [];
+//         foreach ($unit_items as $unit_item) {
+//             if (get_post_meta($unit_item['ID'], 'available', true)) {
+//                 array_push($available_unit_items, $unit_item);
+//             }
+//         }
+
+//         $enable_booking = $current_pod->field("enable_booking");
+//         $direct_booking_active = $current_pod->field("direct_booking_active");
+//         $suppler_booking_email_disabled = $current_pod->field("suppler_booking_email_disabled");
+//         if ($available_unit_items && !empty($available_unit_items) && $show_units) {
+//             $partner = $current_pod->field("partner");
+//             $lokationId = $current_pod->field("id");
+//             $permalink = get_permalink($lokationId);
+
+//             $finalOutput = '';
+//             $finalOutput .= generate_unit_list($finalOutput, $partner, $lokationId, $available_unit_items, $permalink, $enable_booking, 0, $direct_booking_active, $suppler_booking_email_disabled);
+
+//             $finalOutput .= generate_view_all_button($permalink, $partner, 0);
+//             return $finalOutput;
+//         }
+//     }
+// }
+
+// Register the shortcode.
+// add_shortcode("custom_depotrum_list", "custom_depotrum_list_func");

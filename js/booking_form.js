@@ -17,68 +17,130 @@ function capitalizeFirstLetter(string) {
 }
 
 function populateDates() {
-  const optionsContainer = document.querySelector(".custom-select__trigger");
-  const selectDateOption = document.createElement("option");
-  selectDateOption.textContent = "Vælg en dato";
-  selectDateOption.disabled = true;
-  selectDateOption.selected = true; // The option is selected by default
-  optionsContainer.appendChild(selectDateOption);
+  let containers = document.querySelectorAll(".custom-select__trigger");
 
-  for (let i = 0; i < 14; i++) {
-    const date = new Date();
-    date.setDate(date.getDate() + i);
-    const option = document.createElement("option");
-    option.className = "custom-option";
-    let dateString = date.toLocaleDateString("da-DK", {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-    });
-    option.textContent = capitalizeFirstLetter(dateString);
-    option.dataset.value = date.toISOString().split("T")[0];
+  containers.forEach((optionsContainer) => {
+    // const optionsContainer = document.querySelector(".custom-select__trigger");
+    const selectDateOption = document.createElement("option");
+    selectDateOption.textContent = "Vælg en dato";
+    selectDateOption.disabled = true;
+    selectDateOption.selected = true; // The option is selected by default
+    optionsContainer.appendChild(selectDateOption);
 
-    optionsContainer.appendChild(option);
+    for (let i = 0; i < 20; i++) {
+      const date = new Date();
+      date.setDate(date.getDate() + i);
+      const option = document.createElement("option");
+      option.className = "date";
+      let dateString = date.toLocaleDateString("da-DK", {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
+      });
+      option.textContent = capitalizeFirstLetter(dateString);
+      var isoDate = date.toISOString();
+      option.dataset.value = isoDate;
 
-    // Check if the current day is Saturday (6)
-    if (date.getDay() === 6) {
-      // Create and append the separator
-      const separator = document.createElement("option");
-      separator.disabled = true; // Disable the separator so it can't be selected
-      separator.textContent = "----------";
-      optionsContainer.appendChild(separator);
+      optionsContainer.appendChild(option);
+
+      // Check if the current day is Saturday (6)
+      if (date.getDay() === 6) {
+        // Create and append the separator
+        const separator = document.createElement("option");
+        separator.disabled = true; // Disable the separator so it can't be selected
+        separator.textContent = "----------";
+        optionsContainer.appendChild(separator);
+      }
     }
-  }
+    const separator = document.createElement("option");
+    separator.disabled = true; // Disable the separator so it can't be selected
+    separator.textContent = "----------";
+    optionsContainer.appendChild(separator);
+    const futureDateOption = document.createElement("option");
+    futureDateOption.textContent = "Fremtidig Dato";
+    futureDateOption.dataset.value = "future";
+    optionsContainer.appendChild(futureDateOption);
+  });
 }
 
 populateDates();
 
 document.addEventListener("DOMContentLoaded", function () {
-  var form = document.getElementById("booking_form");
-  form.addEventListener("submit", function (event) {
-    event.preventDefault();
+  var forms = document.querySelectorAll(".booking_form");
 
-    console.log("Form submitted with data: ", form);
+  forms.forEach((form) => {
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
 
-    var formData = new FormData(form);
+      var formData = new FormData(form);
 
-    console.log("Form submitted with data: ", formData);
+      $unit_id = formData.get("unit_id");
 
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/wp-admin/admin-ajax.php", true);
-    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-    formData.append("action", "booking_form_action"); // Action hook name
+      console.log("Form submitted with data: ", formData);
 
-    xhr.onload = function () {
-      if (this.status >= 200 && this.status < 400) {
-        // Handle the response here
-        var resp = this.response;
-        console.log(resp);
-      } else {
-        // Handle errors here
+      var enable_direct_booking = formData.get("enable_direct_booking") === "1";
+
+      console.log("Enable direct booking: ", enable_direct_booking);
+
+      if (enable_direct_booking) {
+        var booking_link = formData.get("booking_link");
       }
-    };
 
-    xhr.send(formData);
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "/wp-admin/admin-ajax.php", true);
+      xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+      formData.append("action", "booking_form_action"); // Action hook name
+
+      xhr.onload = function () {
+        if (this.status >= 200 && this.status < 400) {
+          // Handle the response from the php form handler
+          var resp = JSON.parse(this.response);
+          if (resp.success === true) {
+            // The PHP script returned success
+            if (enable_direct_booking) {
+              if (booking_link) {
+                // console.log("Redirecting to booking link");
+                window.location.href = booking_link;
+                return;
+              } else {
+                var errorXhr = new XMLHttpRequest();
+                errorXhr.open("POST", "/wp-admin/admin-ajax.php", true);
+                errorXhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+
+                var errorFormData = new FormData();
+                errorFormData.append("error_message", "no_booking_link");
+                errorFormData.append("unit_id", formData.get("unit_id"));
+                errorFormData.append("action", "javascript_error_action"); // Action hook name
+
+                errorXhr.send(errorFormData);
+
+                window.location.href =
+                  "/reservation/confirmation/" + resp.booking_id;
+              }
+            } else {
+              console.log(
+                "Direct booking disabled, redirecting to thank you page"
+              );
+              window.location.href =
+                "/reservation/confirmation/" + resp.booking_id;
+            }
+          }
+        } else {
+          var errorXhr = new XMLHttpRequest();
+          errorXhr.open("POST", "/wp-admin/admin-ajax.php", true);
+          errorXhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+
+          var errorFormData = new FormData();
+          errorFormData.append("error_message", "undefined_booking_error");
+          errorFormData.append("unit_id", formData.get("unit_id"));
+          errorFormData.append("action", "javascript_error_action"); // Action hook name
+
+          errorXhr.send(errorFormData);
+        }
+      };
+
+      xhr.send(formData);
+    });
   });
 });
 
@@ -86,8 +148,9 @@ function toggleFold(unitId) {
   var formdiv = document.getElementById("foldableDiv-" + unitId);
   var continue_button = document.getElementById("continue-button-" + unitId);
   if (formdiv.style.maxHeight === "0px") {
-    formdiv.style.maxHeight = "500px"; // or the full height of the content
-    formdiv.style.paddingTop = "1rem"; // or the full height of the content
+    formdiv.style.maxHeight = "450px";
+    formdiv.style.paddingTop = "1rem";
+    formdiv.style.paddingBottom = "1rem";
     continue_button.style.backgroundColor = "#eaeaea";
     // remove the hover effect on .depotrum-row
     var style = document.createElement("style");
@@ -99,6 +162,8 @@ function toggleFold(unitId) {
     document.head.appendChild(style);
   } else {
     formdiv.style.maxHeight = "0px";
+    formdiv.style.paddingTop = "0rem";
+    formdiv.style.paddingBottom = "0rem";
     continue_button.style.backgroundColor = "#ff336a";
     // remove the no-hover style
     var style = document.getElementById("no-hover");
@@ -107,3 +172,28 @@ function toggleFold(unitId) {
     }
   }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  var date_dropdowns = document.querySelectorAll(".custom-select__trigger");
+
+  // console.log(date_dropdowns);
+
+  date_dropdowns.forEach((date_dropdown) => {
+    date_dropdown.addEventListener("change", function () {
+      // console.log("Date dropdown changed");
+      var selectedOption = this.options[this.selectedIndex];
+
+      const move_in_date_value = selectedOption.dataset.value;
+
+      // console.log(move_in_date_value);
+
+      var move_in_dates = document.querySelectorAll(".move_in_date");
+
+      // console.log(move_in_dates);
+
+      move_in_dates.forEach((move_in_date) => {
+        move_in_date.value = move_in_date_value;
+      });
+    });
+  });
+});

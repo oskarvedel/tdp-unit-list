@@ -7,7 +7,7 @@
 
 require_once dirname(__FILE__) . '/unit-list.php';
 require_once dirname(__FILE__) . '/tdp-common-unit-list.php';
-require_once dirname(__FILE__) . '/form-handler.php';
+require_once dirname(__FILE__) . '/handle-booking-form.php';
 
 function custom_date_picker_scripts()
 {
