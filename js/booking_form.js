@@ -52,10 +52,15 @@ function populateDates() {
         optionsContainer.appendChild(separator);
       }
     }
-    const separator = document.createElement("option");
-    separator.disabled = true; // Disable the separator so it can't be selected
-    separator.textContent = "----------";
-    optionsContainer.appendChild(separator);
+    // Check if the last child is a separator, add one if it isn't
+    const lastChild = optionsContainer.lastChild;
+    if (!lastChild.textContent === "----------") {
+      const separator = document.createElement("option");
+      separator.disabled = true; // Disable the separator so it can't be selected
+      separator.textContent = "----------";
+      optionsContainer.appendChild(separator);
+    }
+
     const futureDateOption = document.createElement("option");
     futureDateOption.textContent = "Fremtidig Dato";
     futureDateOption.dataset.value = "future";
@@ -71,6 +76,19 @@ document.addEventListener("DOMContentLoaded", function () {
   forms.forEach((form) => {
     form.addEventListener("submit", function (event) {
       event.preventDefault();
+
+      //get the date_dropdown in this instance of the booking_form
+      var date_dropdown = form.querySelector(".custom-select__trigger");
+      if (date_dropdown.value === "Vælg en dato") {
+        event.preventDefault();
+        console.log("unhid error message");
+        var date_error_message = form.querySelector(".error-message");
+        date_error_message.style.display = "block";
+        dateSelected = false;
+      }
+      var dateSelected = true;
+
+      if (!dateSelected) return;
 
       var formData = new FormData(form);
 
@@ -138,7 +156,6 @@ document.addEventListener("DOMContentLoaded", function () {
           errorXhr.send(errorFormData);
         }
       };
-
       xhr.send(formData);
     });
   });
@@ -148,7 +165,7 @@ function toggleFold(unitId) {
   var formdiv = document.getElementById("foldableDiv-" + unitId);
   var continue_button = document.getElementById("continue-button-" + unitId);
   if (formdiv.style.maxHeight === "0px") {
-    formdiv.style.maxHeight = "450px";
+    formdiv.style.maxHeight = "500px";
     formdiv.style.paddingTop = "1rem";
     formdiv.style.paddingBottom = "1rem";
     continue_button.style.backgroundColor = "#eaeaea";
@@ -175,8 +192,6 @@ function toggleFold(unitId) {
 
 document.addEventListener("DOMContentLoaded", function () {
   var date_dropdowns = document.querySelectorAll(".custom-select__trigger");
-
-  // console.log(date_dropdowns);
 
   date_dropdowns.forEach((date_dropdown) => {
     date_dropdown.addEventListener("change", function () {

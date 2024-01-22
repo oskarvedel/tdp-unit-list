@@ -2,7 +2,7 @@
 
 function handle_booking_form()
 {
-    // xdebug_break();
+    xdebug_break();
     $unit_id = $_POST['unit_id'];
 
     // Optional: Check for nonce for security
@@ -25,8 +25,13 @@ function handle_booking_form()
     $last_name = sanitize_text_field($_POST['last_name']);
     $email = sanitize_email($_POST['email']);
     $phone = sanitize_text_field($_POST['phone']);
-    $unit_id = sanitize_text_field($unit_id);
     $booking_link = sanitize_text_field($_POST['booking_link']);
+
+    // Validate each form field
+    if (empty($_POST['move_in_date'])) {
+        // Handle the error appropriately
+        wp_die('Please fill all required fields.');
+    }
 
     if ($_POST['move_in_date'] == "future") {
         $move_in_date_unknown = true;
@@ -93,7 +98,7 @@ function handle_booking_form()
     }
     $size = str_replace('.', ',', $size);
 
-    $post_title = 'Booking #' . $booking_post_id . ': (' . $first_name . ' ' . $last_name . ') - ' . $department['post_title'] . ' (Unit #' . $unit_id . ' - ' . $size . ' ' . $sizeunit . ')';
+    $post_title = 'Booking #' . $booking_post_id . ': (' . $first_name . ' ' . $last_name . ') - ' . $rel_type['post_title'] . ' (Unit #' . $unit_id . ' - ' . $size . ' ' . $sizeunit . ')';
     wp_update_post(array(
         'ID' => $booking_post_id,
         'post_title' => $post_title,

@@ -628,28 +628,29 @@ function generate_booking_form($unit_id, $available_date, $booking_link, $enable
     <input type="hidden" id="booking_link" name="booking_link" value="' . $booking_link . '">
 
     <div class="form-row">
-      <input type="text" id="first-name" name="first_name" placeholder="Fornavn" required>
-
-      <input type="text" id="last-name" name="last_name" placeholder="Efternavn" required>
+    <input type="text" id="first-name" name="first_name" placeholder="Fornavn"required oninvalid="this.setCustomValidity(\'Indtast venligst dit fornavn\')" oninput="this.setCustomValidity(\'\')" />
+    <input type="text" id="last-name" name="last_name" placeholder="Efternavn"required oninvalid="this.setCustomValidity(\'Indtast venligst dit efternavn\')" oninput="this.setCustomValidity(\'\')" />
     </div>
     
     <div class="form-row">
-      <input type="email" id="email" name="email" placeholder="Email adresse" required>
-      <input type="tel" id="phone" name="phone" placeholder="Telefon" required>
+      <input type="email" id="email" name="email" placeholder="Email adresse" required  oninvalid="this.setCustomValidity(\'Indtast venligst din email-adresse\')" oninput="this.setCustomValidity(\'\')">
+      <input type="tel" id="phone" name="phone" placeholder="Telefon" required minlength="6" maxlength="14" pattern=".{6,14}"  oninvalid="this.setCustomValidity(\'Indtast venligst dit telefonnummer\')" oninput="this.setCustomValidity(\'\')">
     </div>
 
     <div class="form-row">
 
 <div class="custom-select-wrapper">
     <div class="custom-select">
-        <select class="custom-select__trigger" id="date-dropdown">Indflytningsdato
+        <select class="custom-select__trigger" id="date-dropdown" reqiured>Indflytningsdato
         </select>
         <div class="dates">
             <!-- JavaScript will populate this area with date options -->
         </div>
         <div class="dropdown-icon"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="10" viewBox="0 0 15 10" class="svg chevron-down"><path d="M7.5 10a1.5 1.5 0 0 1-1.14-.52l-6-7a1.5 1.5 0 1 1 2.28-2L7.5 6.2 12.36.52a1.5 1.5 0 1 1 2.28 2l-6 7A1.5 1.5 0 0 1 7.5 10z"></path></svg></div>
     </div>
+    <div class="error-message" id="date-error-message">Vælg venligst en indflytningsdato</div>
 </div>
+
 </div>
 
 <div class="form-row">
