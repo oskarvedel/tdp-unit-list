@@ -77,6 +77,8 @@ document.addEventListener("DOMContentLoaded", function () {
     form.addEventListener("submit", function (event) {
       event.preventDefault();
 
+      var dateSelected = true;
+
       //get the date_dropdown in this instance of the booking_form
       var date_dropdown = form.querySelector(".custom-select__trigger");
       if (date_dropdown.value === "Vælg en dato") {
@@ -86,7 +88,6 @@ document.addEventListener("DOMContentLoaded", function () {
         date_error_message.style.display = "block";
         dateSelected = false;
       }
-      var dateSelected = true;
 
       if (!dateSelected) return;
 
