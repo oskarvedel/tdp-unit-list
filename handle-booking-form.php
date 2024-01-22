@@ -2,7 +2,6 @@
 
 function handle_booking_form()
 {
-    xdebug_break();
     $unit_id = $_POST['unit_id'];
 
     // Optional: Check for nonce for security
