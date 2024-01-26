@@ -359,9 +359,9 @@ function generate_unit_size_smallbold_text($m2, $m3, $partner)
         } elseif ($m2 > 8 && $m2 <= 12) {
             $output = '<span class="smallbold">Stort depotrum</span>';
         } elseif ($m2 > 12 && $m2 <= 30) {
-            $output = '<span class="smallbold">Meget stort depotrum</span>';
+            $output = '<span class="smallbold">Stort depotrum</span>';
         } elseif ($m2 > 30) {
-            $output = '<span class="smallbold">Meget stort depotrum</span>';
+            $output = '<span class="smallbold">Stort depotrum</span>';
         }
     } else if ($m3) {
         $m3 = floatval($m3); // Convert m3 to integer if it's a string
@@ -378,9 +378,9 @@ function generate_unit_size_smallbold_text($m2, $m3, $partner)
         } elseif ($m3 > 20 && $m3 <= 30) {
             $output = '<span class="smallbold">Stort depotrum</span>';
         } elseif ($m3 > 30 && $m3 <= 75) {
-            $output = '<span class="smallbold">Meget stort depotrum</span>';
+            $output = '<span class="smallbold">Stort depotrum</span>';
         } elseif ($m3 > 75) {
-            $output = '<span class="smallbold">Meget stort depotrum</span>';
+            $output = '<span class="smallbold">Stort depotrum</span>';
         }
     } else {
         $output = '<span class="smallbold">Depotrum</span>';
