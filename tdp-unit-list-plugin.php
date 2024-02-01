@@ -33,12 +33,12 @@ add_action('admin_post_generate_unit_lists', 'handle_generate_unit_lists');
 
 function get_default_archive_page_unit_list()
 {
-    $current_pod = pods();
+    global $post;
     $default_unit_list = '';
-    // xdebug_break();
-    if ($current_pod && $current_pod->exists()) {
-        //get the id of the pod
-        $id = $current_pod->field("id");
+
+    if ($post) {
+        //get the id of the post
+        $id = $post->ID;
         $default_unit_list = get_post_meta($id, 'default_archive_page_unit_list', true);
     }
 
