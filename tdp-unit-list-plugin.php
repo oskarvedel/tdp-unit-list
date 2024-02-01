@@ -51,7 +51,6 @@ function get_default_department_page_unit_list()
 {
     $current_pod = pods();
     $default_unit_list = '';
-    // xdebug_break();
     if ($current_pod && $current_pod->exists()) {
         //get the id of the pod
         $id = $current_pod->field("id");

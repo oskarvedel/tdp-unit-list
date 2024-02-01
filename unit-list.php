@@ -24,13 +24,14 @@ function generate_default_unit_list_for_all_gd_places()
 
 function generate_default_unit_list_for_single_gd_place($gd_place_id, $isArchivePage)
 {
-    // if ($gd_place_id == 1758) {
-    //     xdebug_break();
-    // }
+
+
+
     $show_units = get_post_meta($gd_place_id, 'show_units', true);
     if (!$show_units) {
         return '';
     }
+
     $unit_items = get_post_meta($gd_place_id, 'depotrum', false);
     if (!$unit_items) {
         return '';
@@ -39,7 +40,7 @@ function generate_default_unit_list_for_single_gd_place($gd_place_id, $isArchive
     // check if each unit item is avaliable
     $available_unit_items = [];
     foreach ($unit_items as $unit_item) {
-        if (get_post_meta($unit_item['ID'], 'available', true)) {
+        if (get_post_meta($unit_item, 'available', true)) {
             array_push($available_unit_items, $unit_item);
         }
     }
@@ -86,9 +87,6 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
     $lastElement = end($sorted_ids);
     foreach ($sorted_ids as $depotrum) {
         $id = $depotrum->id;
-        // if ($id == 17914) {
-        //     xdebug_break();
-        // }
         $relTypeId = getRelTypeId_unitlist($id);
         $unit_type = get_post_meta($relTypeId, 'unit_type', true);
         $m2 = get_post_meta($relTypeId, 'm2', true);
@@ -505,7 +503,7 @@ function sort_depotrum_by_price($available_unit_items)
 
     foreach ($available_unit_items as $depotrum) {
 
-        $id = $depotrum['ID'];
+        $id = $depotrum;
         $arrayObject = (object) [
             'id' => $id,
             'price' => get_post_meta($id, 'price', true),
@@ -532,7 +530,7 @@ function sort_depotrum_by_m2_size($available_unit_items)
 
     foreach ($available_unit_items as $depotrum) {
 
-        $id = $depotrum['ID'];
+        $id = $depotrum;
         $relTypeId = getRelTypeId_unitlist($id);
         $arrayObject = (object) [
             'id' => $id,
@@ -557,9 +555,7 @@ function sort_depotrum_by_m3_size($available_unit_items)
 {
     $AllDepotrumArray = [];
 
-    foreach ($available_unit_items as $depotrum) {
-
-        $id = $depotrum['ID'];
+    foreach ($available_unit_items as $id) {
 
         $relTypeId = getRelTypeId_unitlist($id);
         $arrayObject = (object) [
@@ -671,47 +667,3 @@ Hvis du er usikker på din indflytningsdato, så vælg en cirkadato. Du binder d
   </div>';
     return $form;
 }
-
-
-// Kind of depreceated since introducing default unit list
-// function custom_depotrum_list_func()
-// {
-//     $current_pod = pods();
-
-//     // Check if the Pod object exists and the field "partner" is set
-//     if ($current_pod && $current_pod->exists()) {
-//         $show_units = $current_pod->field("show_units");
-//         if (!$show_units) {
-//             return '';
-//         }
-//         $unit_items = $current_pod->field("depotrum");
-//         if (!$unit_items) {
-//             return '';
-//         }
-//         // check if each unit item is avaliable
-//         $available_unit_items = [];
-//         foreach ($unit_items as $unit_item) {
-//             if (get_post_meta($unit_item['ID'], 'available', true)) {
-//                 array_push($available_unit_items, $unit_item);
-//             }
-//         }
-
-//         $enable_booking = $current_pod->field("enable_booking");
-//         $direct_booking_active = $current_pod->field("direct_booking_active");
-//         $suppler_booking_email_disabled = $current_pod->field("suppler_booking_email_disabled");
-//         if ($available_unit_items && !empty($available_unit_items) && $show_units) {
-//             $partner = $current_pod->field("partner");
-//             $lokationId = $current_pod->field("id");
-//             $permalink = get_permalink($lokationId);
-
-//             $finalOutput = '';
-//             $finalOutput .= generate_unit_list($finalOutput, $partner, $lokationId, $available_unit_items, $permalink, $enable_booking, 0, $direct_booking_active, $suppler_booking_email_disabled);
-
-//             $finalOutput .= generate_view_all_button($permalink, $partner, 0);
-//             return $finalOutput;
-//         }
-//     }
-// }
-
-// Register the shortcode.
-// add_shortcode("custom_depotrum_list", "custom_depotrum_list_func");
