@@ -3,6 +3,7 @@
 
 function generate_default_unit_list_for_all_gd_places()
 {
+    xdebug_break();
     $gd_places = get_posts(array(
         'post_type' => 'gd_place',
         'posts_per_page' => -1,
@@ -90,7 +91,28 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
         $relTypeId = getRelTypeId_unitlist($id);
         $unit_type = get_post_meta($relTypeId, 'unit_type', true);
         $m2 = get_post_meta($relTypeId, 'm2', true);
+
+        //replace any "," in m2 strings with "."
+        if (is_string($m2)) {
+            $m2 = str_replace(',', '.', $m2);
+        }
+        //convert any m2 strings to floats
+        if (is_string($m2)) {
+            $m2 = floatval($m2);
+        }
+
         $m3 = get_post_meta($relTypeId, 'm3', true);
+
+        //replace any "," in m3 strings with "."
+        if (is_string($m3)) {
+            $m3 = str_replace(',', '.', $m3);
+        }
+
+        //convert any m3 strings to floats
+        if (is_string($m3)) {
+            $m3 = floatval($m3);
+        }
+
         $available_date = get_post_meta($id, 'available_date', true);
         $booking_link = get_post_meta($id, 'booking_link', true);
 
@@ -294,6 +316,7 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
         }
     } else if ($unit_type == "indoor") {
         if ($m2 && $m3) {
+
             $output .= generate_unit_size_smallbold_text($m2, $m3, $partner);
             $output .= '<div class="break"></div>';
             if ($partner) {
