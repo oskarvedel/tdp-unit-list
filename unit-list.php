@@ -3,7 +3,6 @@
 
 function generate_default_unit_list_for_all_gd_places()
 {
-    xdebug_break();
     $gd_places = get_posts(array(
         'post_type' => 'gd_place',
         'posts_per_page' => -1,
