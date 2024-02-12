@@ -465,37 +465,37 @@ function generate_unit_illustration_column($relTypeId, $unit_type, $m2, $m3, $co
     }
     if ($unit_type == "container") {
         if ($container_type == "8 feet") {
-            $image_url = plugins_url('size-illustrations/10-feet.png', __FILE__);
+            $image_url = plugins_url('size-illustrations/10 feet.png', __FILE__);
             if ($isolated_container) {
-                $image_url = plugins_url('size-illustrations/10-feet-isolated.png', __FILE__);
+                $image_url = plugins_url('size-illustrations/10 feet isolated.png', __FILE__);
             }
         } else if ($container_type == "10 feet") {
-            $image_url = plugins_url('size-illustrations/10-feet.png', __FILE__);
+            $image_url = plugins_url('size-illustrations/10 feet.png', __FILE__);
             if ($isolated_container) {
-                $image_url = plugins_url('size-illustrations/10-feet-isolated.png', __FILE__);
+                $image_url = plugins_url('size-illustrations/10 feet isolated.png', __FILE__);
             }
         } else if ($container_type == "20 feet") {
-            $image_url = plugins_url('size-illustrations/20-feet.png', __FILE__);
+            $image_url = plugins_url('size-illustrations/20 feet.png', __FILE__);
             if ($isolated_container) {
-                $image_url = plugins_url('size-illustrations/20-feet-container-isolated.png', __FILE__);
+                $image_url = plugins_url('size-illustrations/20 feet-container isolated.png', __FILE__);
             }
         } else if ($container_type == "20 feet high cube") {
-            $image_url = plugins_url('size-illustrations/20-feet.png', __FILE__);
+            $image_url = plugins_url('size-illustrations/20 feet.png', __FILE__);
             if ($isolated_container) {
-                $image_url = plugins_url('size-illustrations/20-feet-isolated.png', __FILE__);
+                $image_url = plugins_url('size-illustrations/20 feet isolated.png', __FILE__);
             }
         } else if ($container_type == "40 feet") {
-            $image_url = plugins_url('size-illustrations/40-feet.png', __FILE__);
+            $image_url = plugins_url('size-illustrations/40 feet.png', __FILE__);
             if ($isolated_container) {
-                $image_url = plugins_url('size-illustrations/40-feet-isolated.png', __FILE__);
+                $image_url = plugins_url('size-illustrations/40 feet isolated.png', __FILE__);
             }
         } else if ($container_type == "40 feet high cube") {
-            $image_url = plugins_url('size-illustrations/40-feet.png', __FILE__);
+            $image_url = plugins_url('size-illustrations/40 feet.png', __FILE__);
             if ($isolated_container) {
-                $image_url = plugins_url('size-illustrations/40-feet-isolated.png', __FILE__);
+                $image_url = plugins_url('size-illustrations/40 feet isolated.png', __FILE__);
             }
         } else {
-            $image_url = plugins_url('size-illustrations/20-feet.png', __FILE__);
+            $image_url = plugins_url('size-illustrations/20 feet.png', __FILE__);
         }
     } else if ($unit_type == "indoor") {
         if ($m2) {
