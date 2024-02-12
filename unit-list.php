@@ -302,11 +302,11 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
         $output .= '<span class="big">' . $title . '</span>';
         $output .= '<div class="break"></div>';
         if ($m2 && $m3) {
-            $output .= '<span class="detaileddesc">' . $title . ' på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
+            $output .= '<span class="detaileddesc">' . $desc . ' på ' . number_format($m2, 1, ',', '') . ' m² / ' . number_format($m3, 1, ',', '') . ' m³</span>';
         } else if ($m2) {
-            $output .= '<span class="detaileddesc">' . $title . ' på ' . number_format($m2, 1, ',', '') . ' m²</span>';
+            $output .= '<span class="detaileddesc">' . $desc . ' på ' . number_format($m2, 1, ',', '') . ' m²</span>';
         } else if ($m3) {
-            $output .= '<span class="detaileddesc"' . $title . ' på ' . number_format($m3, 1, ',', '') . 'm³</span>';
+            $output .= '<span class="detaileddesc"' . $desc . ' på ' . number_format($m3, 1, ',', '') . 'm³</span>';
         }
     } else if ($unit_type == "unit_in_container") {
         if ($m2 && $m3) {
