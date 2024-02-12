@@ -10,10 +10,16 @@ function generate_default_unit_list_for_all_gd_places()
     ));
     foreach ($gd_places as $gd_place) {
         $gd_place_id = $gd_place->ID;
+
+        if ($gd_place_id == 3056) {
+            xdebug_break();
+        }
+        //generate archive unit list
         $default_archive_page_unit_list = generate_default_unit_list_for_single_gd_place($gd_place_id, 1);
         if ($default_archive_page_unit_list) {
             update_post_meta($gd_place_id, 'default_archive_page_unit_list', $default_archive_page_unit_list);
         }
+        //generate department unit list
         $default_department_page_unit_list = generate_default_unit_list_for_single_gd_place($gd_place_id, 0);
         if ($default_department_page_unit_list) {
             update_post_meta($gd_place_id, 'default_department_page_unit_list', $default_department_page_unit_list);
@@ -24,8 +30,6 @@ function generate_default_unit_list_for_all_gd_places()
 
 function generate_default_unit_list_for_single_gd_place($gd_place_id, $isArchivePage)
 {
-
-
 
     $show_units = get_post_meta($gd_place_id, 'show_units', true);
     if (!$show_units) {
