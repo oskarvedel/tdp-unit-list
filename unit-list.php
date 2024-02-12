@@ -477,7 +477,7 @@ function generate_unit_illustration_column($relTypeId, $unit_type, $m2, $m3, $co
         } else if ($container_type == "20 feet") {
             $image_url = plugins_url('size-illustrations/20 feet.png', __FILE__);
             if ($isolated_container) {
-                $image_url = plugins_url('size-illustrations/20 feet-container isolated.png', __FILE__);
+                $image_url = plugins_url('size-illustrations/20 feet container isolated.png', __FILE__);
             }
         } else if ($container_type == "20 feet high cube") {
             $image_url = plugins_url('size-illustrations/20 feet.png', __FILE__);
