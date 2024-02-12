@@ -267,19 +267,16 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
                 $title = "Isoleret 10-fods container";
             }
         } else if ($container_type == "20 feet") {
-            $output .= '<span class="big">20-fods container</span>';
             $title = "20-fods container";
             if ($isolated_container) {
-                $title = "Isoleret ´20-fods container";
+                $title = "Isoleret 20-fods container";
             }
         } else if ($container_type == "20 feet high cube") {
-            $output .= '<span class="big">20-fods container</span>';
             $title = "20-fods high cube container";
             if ($isolated_container) {
                 $title = "Ekstra høj isoleret 20-fods container";
             }
         } else if ($container_type == "40 feet") {
-            $output .= '<span class="big">40-fods container</span>';
             $title = "40-fods container";
             if ($isolated_container) {
                 $title = "Isoleret 40-fods container";
