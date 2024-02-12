@@ -258,33 +258,45 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
     if ($unit_type == "container") {
         if ($container_type == "8 feet") {
             $title = "8-fods container";
+            $desc = $title;
             if ($isolated_container) {
-                $title = "Isoleret 8-fods container";
+                $title = "8-fods container (Isoleret)";
+                $desc = "Isoleret 8-fods container";
             }
         } else if ($container_type == "10 feet") {
             $title = "10-fods container";
+            $desc = $title;
             if ($isolated_container) {
-                $title = "Isoleret 10-fods container";
+                $title = "10-fods container (Isoleret)";
+                $desc = "Isoleret 10-fods container";
             }
         } else if ($container_type == "20 feet") {
             $title = "20-fods container";
+            $desc = $title;
             if ($isolated_container) {
-                $title = "Isoleret 20-fods container";
+                $title = "20-fods container (Isoleret)";
+                $desc = "Isoleret 20-fods container";
             }
         } else if ($container_type == "20 feet high cube") {
             $title = "20-fods high cube container";
+            $desc = "Ekstra høj 20-fods container";
             if ($isolated_container) {
-                $title = "Ekstra høj isoleret 20-fods container";
+                $title = "20-fods high cube container (Isoleret)";
+                $desc = "Ekstra høj isoleret 20-fods container";
             }
         } else if ($container_type == "40 feet") {
             $title = "40-fods container";
+            $desc = $title;
             if ($isolated_container) {
-                $title = "Isoleret 40-fods container";
+                $title = "40-fods container (Isoleret)";
+                $desc = "Isoleret 40-fods container";
             }
         } else if ($container_type == "40 feet high cube") {
             $title = "40-fods high cube container";
+            $desc = "Ekstra høj 40-fods container";
             if ($isolated_container) {
-                $title = "Ekstra høj isoleret 40-fods container";
+                $title = "40-fods high cube container (Isoleret)";
+                $desc = "Ekstra høj isoleret 40-fods container";
             }
         }
         $output .= '<span class="big">' . $title . '</span>';
