@@ -295,12 +295,26 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
             $title = "40-fods high cube container";
             $desc = "Ekstra høj 40-fods container";
             if ($isolated_container) {
-                $title = "40-fods high cube container (Isoleret)";
+                $title .= "40-fods high cube container (Isoleret)";
                 $desc = "Ekstra høj isoleret 40-fods container";
+            }
+        } else if ($container_type == "other") {
+            $title = "Container";
+            $desc = "Container";
+            if ($m2 && $m3) {
+                $title = number_format($m3, 1, ',', '') . number_format($m2, 1, ',', '') . ' m² / ' .  ' m³ ' . 'container';
+            } else if ($m2) {
+                $output .= number_format($m2, 1, ',', '') . ' m² container';
+            } else if ($m3) {
+                $output .= number_format($m3, 1, ',', '') . 'm³ container';
+            }
+            if ($isolated_container) {
+                $title .= " (Isoleret)";
+                $desc = "Isoleret 40-fods container";
             }
         } else {
             $title = "Container";
-            $desc = "";
+            $desc = "Container";
             if ($isolated_container) {
                 $title = "Container (Isoleret)";
                 $desc = "Isoleret container";
