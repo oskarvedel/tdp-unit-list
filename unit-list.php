@@ -301,7 +301,7 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
             $title = "Container";
             $desc = "Container";
             if ($m2 && $m3) {
-                $title = number_format($m3, 1, ',', '') .  ' m³ / ' . number_format($m2, 1, ',', '') . ' m²'  . 'container';
+                $title = number_format($m3, 1, ',', '') .  ' m³ / ' . number_format($m2, 1, ',', '') . ' m²'  . ' container';
             } else if ($m3) {
                 $output .= number_format($m3, 1, ',', '') . 'm³ container';
             } else if ($m2) {
