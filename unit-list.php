@@ -298,6 +298,13 @@ function generate_unit_desc_column($relTypeId, $unit_type, $m2, $m3, $container_
                 $title = "40-fods high cube container (Isoleret)";
                 $desc = "Ekstra høj isoleret 40-fods container";
             }
+        } else {
+            $title = "Container";
+            $desc = "";
+            if ($isolated_container) {
+                $title = "Container (Isoleret)";
+                $desc = "Isoleret container";
+            }
         }
         $output .= '<span class="big">' . $title . '</span>';
         $output .= '<div class="break"></div>';
