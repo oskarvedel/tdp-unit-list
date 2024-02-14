@@ -11,9 +11,6 @@ function generate_default_unit_list_for_all_gd_places()
     foreach ($gd_places as $gd_place) {
         $gd_place_id = $gd_place->ID;
 
-        if ($gd_place_id == 3056) {
-            // xdebug_break();
-        }
         //generate archive unit list
         $default_archive_page_unit_list = generate_default_unit_list_for_single_gd_place($gd_place_id, 1);
         if ($default_archive_page_unit_list) {
@@ -41,7 +38,7 @@ function generate_default_unit_list_for_single_gd_place($gd_place_id, $isArchive
         return '';
     }
 
-    // check if each unit item is avaliable
+    // check if each unit item is available
     $available_unit_items = [];
     foreach ($unit_items as $unit_item) {
         if (get_post_meta($unit_item, 'available', true)) {
@@ -57,12 +54,17 @@ function generate_default_unit_list_for_single_gd_place($gd_place_id, $isArchive
     $enable_direct_booking = get_post_meta($gd_place_id, 'enable_direct_booking', true);
 
     if ($available_unit_items && !empty($available_unit_items) && $show_units) {
+        $gd_place_title = get_the_title($gd_place_id);
         $partner = get_post_meta($gd_place_id, 'partner', true);
+        $num_of_available_units = get_post_meta($gd_place_id, 'num of units available', true);
+        if ($num_of_available_units != 0) {
+            // xdebug_break();
+        }
         $permalink = get_permalink($gd_place_id);
 
         $finalOutput = '';
         $finalOutput .= generate_unit_list($finalOutput, $partner, $gd_place_id, $available_unit_items, $permalink, $enable_booking, $enable_direct_booking, $isArchivePage);
-        $finalOutput .= generate_view_all_button($permalink, $partner, $isArchivePage);
+        $finalOutput .= generate_view_all_button($permalink, $partner, $num_of_available_units, $gd_place_title, $isArchivePage);
         return $finalOutput;
     }
 }
@@ -122,6 +124,8 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
 
         $available_date = get_post_meta($id, 'available_date', true);
         $booking_link = get_post_meta($id, 'booking_link', true);
+
+
 
         $container_type = get_post_meta($relTypeId, 'container_type', true);
         $isolated_container = get_post_meta($relTypeId, 'isolated_container', true);
@@ -203,13 +207,18 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
         $finalOutput .= $arrayItem;
     }
     $finalOutput .= "</div>";
+
     return $finalOutput;
 }
 
-function generate_view_all_button($permalink, $partner, $isArchivePage = 0)
+function generate_view_all_button($permalink, $partner, $num_of_available_units, $gd_place_title, $isArchivePage = 0)
 {
     if ($isArchivePage && $partner) {
-        $finalOutput = '<a  href="' . $permalink . '"><div class="view-all-row yellowhover"><p class="view-all">Se alle ledige rum hos denne udlejer</p><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22"><path d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z" /></svg></div></a>';
+        if ($num_of_available_units > 8) {
+            $finalOutput = '<a  href="' . $permalink . '"><div class="view-all-row yellowhover"><p class="view-all">Se alle ' . $num_of_available_units . ' ledige rum hos ' . $gd_place_title . '</p><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22"><path d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z" /></svg></div></a>';
+        } else {
+            $finalOutput = '<a  href="' . $permalink . '"><div class="view-all-row yellowhover"><p class="view-all">Se alle ledige rum</p><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="22" height="22"><path d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z" /></svg></div></a>';
+        }
         return $finalOutput;
     } else {
         return '';

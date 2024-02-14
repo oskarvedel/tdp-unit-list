@@ -26,7 +26,6 @@ function generate_archive_item_html_for_all_gd_places()
 
         $post_info = geodir_get_post_info($gd_place_id);
 
-
         $post_tags = wp_get_post_terms($gd_place_id, 'gd_place_tags'); // Get the GeoDirectory tags of the post
 
         // construct an array with the tags if they are "1" in the post_info object
@@ -50,11 +49,14 @@ function generate_archive_item_html_for_all_gd_places()
 
         //construct the archive item html
 
+        //construct the header
         if ($featured) {
             $archive_item_html = '<div class="archive-item featured">' . $featured_header . '<div class="main-info-row"><div class="image-column">';
         } else {
             $archive_item_html = '<div class="archive-item"><div class="main-info-row"><div class="image-column">';
         }
+
+        $archive_item_html = str_replace("[partner_name]", $post_info->post_title, $archive_item_html);
 
         //construct the image column
         $image_url = get_the_post_thumbnail_url($gd_place_id, array(175, 125));
@@ -90,6 +92,7 @@ function generate_archive_item_html_for_all_gd_places()
         if ($default_archive_page_unit_list) {
             $archive_item_html .= '<br/>' . $default_archive_page_unit_list;
         }
+
 
         update_post_meta($gd_place_id, 'archive_item_html', $archive_item_html);
     }
@@ -149,6 +152,6 @@ $featured_header = '<div class="featured-header">
       <path d="M5 15a1 1 0 100-2 1 1 0 000 2"></path>
    </g>
 </svg>
-<span class="featured-description-title truncate-text">Pålidelig partner</span><span class="featured-description truncate-text">: Du kan trygt opbevare dine ting her, da det er en af vores mest betroede partnere</span>
+<span class="featured-description-title truncate-text">Pålidelig partner</span><span class="featured-description truncate-text">: [partner_name] er en af vores betroede partnere, så du kan trygt opbevare dine ejendele her</span>
 </div>
 ';
