@@ -219,7 +219,7 @@ function generate_view_all_button($permalink, $partner, $isArchivePage = 0)
 function generate_navigation_column($partner, $unit_id, $enable_booking, $isArchivePage)
 {
     $output = '<h3 class="navigation-column vertical-center" onclick="toggleFold(' . $unit_id . ')">';
-    if ((!geodir_is_page('post_type') || !geodir_is_page('search')) && $partner && $enable_booking) { //listing page + partner
+    if (!$isArchivePage && $partner && $enable_booking) { //listing page + partner
         $output .=  '<div class="continue-button" id="continue-button-' .  $unit_id . '">Fortsæt</div>';
     }
     // $output .= '</div>';
