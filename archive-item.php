@@ -68,17 +68,16 @@ function generate_archive_item_html_for_all_gd_places()
         //construct the title column
         $archive_item_html .= '<div class="title-column">';
 
-        $archive_item_html .= '<h2 class="truncate-text">' . $post_info->post_title . '</h2>';
+        $archive_item_html .= '<h2 class="">' . $post_info->post_title . '</h2>';
 
         $address = $post_info->street . ", " . $post_info->zip . " " . $post_info->city;
 
         if ($address) {
-            $archive_item_html .= '<p class="address">' . $address . '</p>';
+            $archive_item_html .= '<p class="address truncate-text">' . $address . '</p>';
         }
 
-        $archive_item_html .= '<p>' . get_post_meta($gd_place_id, 'address', true) . '</p>';
-
         $archive_item_html .= '</div>'; // close title-column
+
 
         //construct the tag column
         $archive_item_html .= generate_tag_html($tag_array);
@@ -101,7 +100,7 @@ function generate_archive_item_html_for_all_gd_places()
 function generate_tag_html($tag_array)
 {
     // xdebug_break();
-    
+
     //cut the tag array to 3
     $tag_array = array_slice($tag_array, 0, 3);
 
