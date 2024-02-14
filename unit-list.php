@@ -227,11 +227,9 @@ function generate_view_all_button($permalink, $partner, $num_of_available_units,
 
 function generate_navigation_column($partner, $unit_id, $enable_booking, $isArchivePage)
 {
-    $output = '<h3 class="navigation-column vertical-center" onclick="toggleFold(' . $unit_id . ')">';
     if (!$isArchivePage && $partner && $enable_booking) { //listing page + partner
         $output .=  '<div class="continue-button" id="continue-button-' .  $unit_id . '">Fortsæt</div>';
     }
-    // $output .= '</div>';
     return $output;
 }
 
