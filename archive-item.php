@@ -101,8 +101,7 @@ function generate_archive_item_html_for_all_gd_places()
 function generate_tag_html($tag_array)
 {
     // xdebug_break();
-
-
+    
     //cut the tag array to 3
     $tag_array = array_slice($tag_array, 0, 3);
 
