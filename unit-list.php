@@ -228,9 +228,8 @@ function generate_view_all_button($permalink, $partner, $num_of_available_units,
 function generate_navigation_column($partner, $unit_id, $enable_booking, $isArchivePage)
 {
     if (!$isArchivePage && $partner && $enable_booking) { //listing page + partner
-        $output .=  '<div class="continue-button" id="continue-button-' .  $unit_id . '">Fortsæt</div>';
+        return '<div class="continue-button" id="continue-button-' .  $unit_id . '">Fortsæt</div>';
     }
-    return $output;
 }
 
 function generate_price_column($price, $price_per_m3_per_month, $partner, $isArchivePage, $enable_booking)
