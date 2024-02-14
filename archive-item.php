@@ -149,6 +149,6 @@ $featured_header = '<div class="featured-header">
       <path d="M5 15a1 1 0 100-2 1 1 0 000 2"></path>
    </g>
 </svg>
-<span class="featured-description-title">Pålidelig partner</span><span class="featured-description">: Du kan trygt opbevare dine ting her, da det er en af vores mest betroede partnere</span>
+<span class="featured-description-title truncate-text">Pålidelig partner</span><span class="featured-description truncate-text">: Du kan trygt opbevare dine ting her, da det er en af vores mest betroede partnere</span>
 </div>
 ';
