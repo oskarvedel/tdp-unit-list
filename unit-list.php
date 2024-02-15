@@ -125,8 +125,6 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
         $available_date = get_post_meta($id, 'available_date', true);
         $booking_link = get_post_meta($id, 'booking_link', true);
 
-
-
         $container_type = get_post_meta($relTypeId, 'container_type', true);
         $isolated_container = get_post_meta($relTypeId, 'isolated_container', true);
         $ventilated_container = get_post_meta($relTypeId, 'ventilated_container', true);
@@ -138,7 +136,7 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
         if ($isArchivePage) {
             if ($partner) {
                 if ($depotrum === $lastElement) {
-                    $output .= '<a href="' . $permalink . '" class="depotrum-row yellowhover partner last">';
+                    $output .= '<a href="' . $permalink . '" class="depotrum-row yellowhover partner last" >';
                 } else {
                     $output .= '<a href="' . $permalink . '" class="depotrum-row yellowhover partner">';
                 }
@@ -166,7 +164,7 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
         }
 
         if ($enable_booking && !$isArchivePage) {
-            $output .= '<div class="flex-container booking-enabled">';
+            $output .= '<div class="flex-container booking-enabled" onclick="toggleFold(' . $id . ')">';
         } else {
             $output .= '<div class="flex-container">';
         }
@@ -733,7 +731,7 @@ function getRelTypeId_unitlist($id)
 function generate_booking_form($unit_id, $available_date, $booking_link, $enable_direct_booking)
 {
     $form = '
-    <div class="foldableDiv" id="foldableDiv-' . $unit_id . '" style="max-height: 0px;">
+    <div class="formdiv" id="formdiv-' . $unit_id . '" style="max-height: 0px;">
 
     <div class="lock-in-rate">
     <img src="' . esc_url(plugins_url('img/clock.svg', __FILE__)) . '" alt="Clock Icon" class="clock-icon" />

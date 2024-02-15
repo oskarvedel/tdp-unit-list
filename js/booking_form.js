@@ -17,6 +17,7 @@ function capitalizeFirstLetter(string) {
 }
 
 function populateDates() {
+  console.log("Populating dates");
   let containers = document.querySelectorAll(".custom-select__trigger");
 
   containers.forEach((optionsContainer) => {
@@ -163,9 +164,12 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function toggleFold(unitId) {
-  var formdiv = document.getElementById("foldableDiv-" + unitId);
+  // console.log("Toggling fold");
+  var formdiv = document.getElementById("formdiv-" + unitId);
   var continue_button = document.getElementById("continue-button-" + unitId);
+  // console.log("continue button clicked");
   if (formdiv.style.maxHeight === "0px") {
+    // console.log("Opening form");
     formdiv.style.maxHeight = "500px";
     formdiv.style.paddingTop = "1rem";
     formdiv.style.paddingBottom = "1rem";
