@@ -51,9 +51,9 @@ function generate_archive_item_html_for_all_gd_places()
 
         //construct the header
         if ($featured) {
-            $archive_item_html = '<div class="archive-item featured">' . $featured_header . '<div class="main-info-row"><div class="image-column">';
+            $archive_item_html = '<a href="' . get_permalink($gd_place_id) . '"><div class="archive-item featured">' . $featured_header . '<div class="main-info-row"><div class="image-column">';
         } else {
-            $archive_item_html = '<div class="archive-item"><div class="main-info-row"><div class="image-column">';
+            $archive_item_html = '<a href="' . get_permalink($gd_place_id) . '"><div class="archive-item"><div class="main-info-row"><div class="image-column">';
         }
 
         $archive_item_html = str_replace("[partner_name]", $post_info->post_title, $archive_item_html);
@@ -84,7 +84,7 @@ function generate_archive_item_html_for_all_gd_places()
         //construct the tag column
         $archive_item_html .= generate_tag_html($tag_array);
 
-        $archive_item_html .= '</div>'; // close main-info-row
+        $archive_item_html .= '</div></a>'; // close main-info-row
 
         //add the unit list
         $default_archive_page_unit_list = get_post_meta($gd_place_id, 'default_archive_page_unit_list', true);
