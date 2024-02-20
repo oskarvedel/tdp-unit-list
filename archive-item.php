@@ -70,7 +70,7 @@ function generate_archive_item_html_for_all_gd_places()
         //construct the title column
         $archive_item_html .= '<div class="title-column">';
 
-        $archive_item_html .= '<h2 class="">' . $post_info->post_title . '</h2>';
+        $archive_item_html .= '<h2 class="truncate-text">' . $post_info->post_title . '</h2>';
 
         $address = $post_info->street . ", " . $post_info->zip . " " . $post_info->city;
 
