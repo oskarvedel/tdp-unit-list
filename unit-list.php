@@ -83,7 +83,7 @@ function generate_unit_list($finalOutput, $partner, $lokationId, $available_unit
     }
 
     if ($isArchivePage) {
-        $sorted_ids = extract_evenly_spaced($sorted_ids, 4);
+        $sorted_ids = extract_evenly_spaced($sorted_ids, 3);
     }
 
     if ($isArchivePage) {
@@ -706,11 +706,12 @@ function extract_evenly_spaced($array, $num_values)
         return $array;
     }
 
-    $step = intval($size / $num_values);
+    $step = $size / $num_values;
     $result = [];
 
-    for ($i = 0; $i < $size; $i += $step) {
-        $result[] = $array[$i];
+    for ($i = 0; $i < $num_values; $i++) {
+        $index = min(intval($i * $step), $size - 1);
+        $result[] = $array[$index];
     }
 
     return $result;
