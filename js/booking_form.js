@@ -1,16 +1,28 @@
-// Add this script to handle opening the custom select and populating it with dates
-document.addEventListener("click", function (e) {
-  const select = document.querySelector(".custom-select");
-  if (!select.contains(e.target)) {
-    select.classList.remove("open");
-  }
-});
+// Get the current URL
+const currentUrl = window.location.href;
 
-document
-  .querySelector(".custom-select__trigger")
-  .addEventListener("click", function () {
-    this.parentElement.classList.toggle("open");
+// Define the base URL of your subset
+const baseUrl = "lokation";
+
+// Check if the current URL starts with the base URL
+if (currentUrl.includes(baseUrl)) {
+  console.log("Current URL is in the subset");
+  populateDates();
+  // Add the event listener if the current URL is in the subset
+  document.addEventListener("click", function (e) {
+    const select = document.querySelector(".custom-select");
+    if (select && !select.contains(e.target)) {
+      select.classList.remove("open");
+    }
   });
+
+  const trigger = document.querySelector(".custom-select__trigger");
+  if (trigger) {
+    trigger.addEventListener("click", function () {
+      this.parentElement.classList.toggle("open");
+    });
+  }
+}
 
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -68,8 +80,6 @@ function populateDates() {
     optionsContainer.appendChild(futureDateOption);
   });
 }
-
-populateDates();
 
 document.addEventListener("DOMContentLoaded", function () {
   var forms = document.querySelectorAll(".booking_form");
