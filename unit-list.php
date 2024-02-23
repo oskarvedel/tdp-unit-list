@@ -731,6 +731,8 @@ function getRelTypeId_unitlist($id)
 
 function generate_booking_form($unit_id, $available_date, $booking_link, $enable_direct_booking)
 {
+    $nonce = wp_create_nonce('booking_form_nonce_action');
+
     $form = '
     <div class="formdiv" id="formdiv-' . $unit_id . '" style="max-height: 0px;">
 
@@ -741,6 +743,7 @@ function generate_booking_form($unit_id, $available_date, $booking_link, $enable
 
 
     <form method="post" id="booking_form-' . $unit_id . '" class="booking_form">
+    <input type="hidden" id="nonce" name="nonce" value="' . $nonce . '">
     <input type="text" class="move_in_date" id="move_in_date-' . $unit_id . '" name="move_in_date" readonly style="display: none;">
     <input type="number" id="unit_id" name="unit_id" value="' . $unit_id . '" readonly style="display: none;">
     <input type="hidden" id="enable_direct_booking" name="enable_direct_booking" value="' . $enable_direct_booking . '">
@@ -779,7 +782,7 @@ Hvis du er usikker på din indflytningsdato, så vælg en cirkadato. Du binder d
 </div>
 
     <div class="form-row center-items">
-    <input type="submit" value="Reservér">
+    <input type="submit" id="reserveBtn-' . $unit_id . '" onclick="gtag_report_conversion();"  value="Reservér">
     </div>
 
     <p class="instruction full-width">
