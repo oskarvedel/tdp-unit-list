@@ -206,6 +206,29 @@ function toggleFold(unitId) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  var booking_forms = document.querySelectorAll(".booking_form");
+
+  booking_forms.forEach((booking_form) => {
+    booking_form.addEventListener("submit", function () {
+      var unitId = booking_form.querySelector('input[name="unit_id"]').value;
+      var buttonId = "reserveBtn-" + unitId;
+      var submitButton = document.getElementById(buttonId);
+      console.log("Form submitted");
+
+      // Disable the submit button
+      submitButton.disabled = true;
+
+      // Change button text to indicate processing
+      submitButton.value = "Arbejder...";
+
+      // Change the button color
+      submitButton.style.backgroundColor = "#B2B2B2";
+    });
+  });
+});
+
+
+document.addEventListener("DOMContentLoaded", function () {
   var date_dropdowns = document.querySelectorAll(".custom-select__trigger");
 
   date_dropdowns.forEach((date_dropdown) => {
