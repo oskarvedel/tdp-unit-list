@@ -748,6 +748,7 @@ function generate_booking_form($unit_id, $available_date, $booking_link, $enable
     <input type="number" id="unit_id" name="unit_id" value="' . $unit_id . '" readonly style="display: none;">
     <input type="hidden" id="enable_direct_booking" name="enable_direct_booking" value="' . $enable_direct_booking . '">
     <input type="hidden" id="booking_link" name="booking_link" value="' . $booking_link . '">
+    <input type="text" id="vibecheck" name="vibecheck">
 
     <div class="form-row">
     <input type="text" id="first-name" name="first_name" placeholder="Fornavn"required oninvalid="this.setCustomValidity(\'Indtast venligst dit fornavn\')" oninput="this.setCustomValidity(\'\')" />
